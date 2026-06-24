@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "RecipeHub",
   description: "Share and discover amazing recipes",
+  openGraph: {
+    title: 'RecipeHub',
+    description: 'Share and discover amazing recipes',
+    siteName: 'RecipeHub',
+  },
 };
 
 export default function RootLayout({ children }) {
