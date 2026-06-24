@@ -17,14 +17,11 @@ export default function ReportModal({ isOpen, onClose, recipeId, recipeName }) {
     
     setLoading(true);
     try {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
       const res = await fetch('http://localhost:5000/api/reports', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ recipeId, reason })
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ recipeId, reason }),
       });
       
       if (res.ok) {

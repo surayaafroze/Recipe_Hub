@@ -9,16 +9,11 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   const toggleFavorite = async () => {
-    // Standard fetch, assuming token is managed by the app somehow
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
-    
     try {
       if (isFavorited) {
         const res = await fetch(`http://localhost:5000/api/favorites/${recipe._id}`, {
           method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          credentials: 'include'
         });
         if (res.ok) {
           setIsFavorited(false);
@@ -31,9 +26,9 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
         const res = await fetch(`http://localhost:5000/api/favorites`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           },
+          credentials: 'include',
           body: JSON.stringify({ recipeId: recipe._id })
         });
         if (res.ok) {
