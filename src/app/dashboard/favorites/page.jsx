@@ -7,8 +7,6 @@ export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchToken = () => typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
-
   useEffect(() => {
     fetchFavorites();
   }, []);
@@ -16,7 +14,7 @@ export default function FavoritesPage() {
   const fetchFavorites = async () => {
     try {
       const res = await fetch('http://localhost:5000/api/favorites', {
-        headers: { 'Authorization': `Bearer ${fetchToken()}` }
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
@@ -33,11 +31,11 @@ export default function FavoritesPage() {
     try {
       const res = await fetch(`http://localhost:5000/api/favorites/${recipeId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${fetchToken()}` }
+        credentials: 'include',
       });
       if (res.ok) {
         toast.success('Removed from favorites');
-        setFavorites(favorites.filter(fav => fav._id !== recipeId));
+        setFavorites(favorites.filter(fav => fav._id.toString() !== recipeId.toString()));
       } else {
         toast.error('Failed to remove favorite');
       }
@@ -46,7 +44,7 @@ export default function FavoritesPage() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading favorites...</div>;
+  if (loading) return <div className="p-8 text-center text-gray-500">Loading favorites...</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6 my-8">

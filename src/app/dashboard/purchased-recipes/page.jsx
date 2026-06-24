@@ -7,8 +7,6 @@ export default function PurchasedRecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchToken = () => typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
-
   useEffect(() => {
     fetchPurchasedRecipes();
   }, []);
@@ -16,7 +14,7 @@ export default function PurchasedRecipesPage() {
   const fetchPurchasedRecipes = async () => {
     try {
       const res = await fetch('http://localhost:5000/api/recipes/purchased', {
-        headers: { 'Authorization': `Bearer ${fetchToken()}` }
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
@@ -29,7 +27,7 @@ export default function PurchasedRecipesPage() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading purchased recipes...</div>;
+  if (loading) return <div className="p-8 text-center text-gray-500">Loading purchased recipes...</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6 my-8">
