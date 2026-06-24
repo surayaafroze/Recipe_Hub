@@ -21,10 +21,16 @@ export default function AdminDashboard() {
 
       if (activeTab === 'overview') {
         const res = await fetch('http://localhost:5000/api/admin/stats', { headers });
-        if (res.ok) setData(prev => ({ ...prev, stats: await res.json() }));
+        if (res.ok) {
+          const stats = await res.json();
+          setData(prev => ({ ...prev, stats }));
+        }
       } else if (activeTab === 'users') {
         const res = await fetch('http://localhost:5000/api/admin/users', { headers });
-        if (res.ok) setData(prev => ({ ...prev, users: await res.json() }));
+        if (res.ok) {
+          const users = await res.json();
+          setData(prev => ({ ...prev, users }));
+        }
       } else if (activeTab === 'recipes') {
         const res = await fetch('http://localhost:5000/api/recipes?limit=50', { headers });
         if (res.ok) {
@@ -33,10 +39,16 @@ export default function AdminDashboard() {
         }
       } else if (activeTab === 'reports') {
         const res = await fetch('http://localhost:5000/api/reports', { headers });
-        if (res.ok) setData(prev => ({ ...prev, reports: await res.json() }));
+        if (res.ok) {
+          const reports = await res.json();
+          setData(prev => ({ ...prev, reports }));
+        }
       } else if (activeTab === 'payments') {
         const res = await fetch('http://localhost:5000/api/admin/payments', { headers });
-        if (res.ok) setData(prev => ({ ...prev, payments: await res.json() }));
+        if (res.ok) {
+          const payments = await res.json();
+          setData(prev => ({ ...prev, payments }));
+        }
       }
     } catch (err) {
       toast.error('Failed to load data');
