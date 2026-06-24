@@ -2,14 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import DashboardStats from '../../components/dashboard/DashboardStats';
+import { useSession } from '../../lib/auth-client';
 
 export default function DashboardPage() {
+  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
     totalRecipes: 0,
     totalFavorites: 0,
     totalLikesReceived: 0,
-    isPremium: false
+    isPremium: false,
+    role: 'user'
   });
   const [fetchingStats, setFetchingStats] = useState(true);
 
@@ -77,7 +80,7 @@ export default function DashboardPage() {
         <DashboardStats stats={stats} />
       )}
 
-      {!stats.isPremium && (
+      {!fetchingStats && !stats.isPremium && session?.user?.role !== 'admin' && (
         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Upgrade to Premium</h2>

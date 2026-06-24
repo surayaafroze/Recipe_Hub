@@ -2,9 +2,9 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useSession } from '@/lib/auth-client';
 import toast from 'react-hot-toast';
 import Loader from '@/components/shared/Loader';
+import { LayoutDashboard, Users, BookOpen, AlertOctagon, CreditCard } from 'lucide-react';
 
 function AdminDashboardContent() {
   const searchParams = useSearchParams();
@@ -13,8 +13,8 @@ function AdminDashboardContent() {
   const [activeTab, setActiveTab] = useState(initialTab);
   const [data, setData] = useState({ stats: null, users: [], recipes: [], reports: [], payments: [] });
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Keep state synced with URL search parameter if it changes
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab && ['overview', 'users', 'recipes', 'reports', 'payments'].includes(tab)) {
@@ -154,124 +154,201 @@ function AdminDashboardContent() {
     }
   };
 
-  const tabs = ['overview', 'users', 'recipes', 'reports', 'payments'];
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'users', label: 'Manage Users', icon: Users },
+    { id: 'recipes', label: 'Manage Recipes', icon: BookOpen },
+    { id: 'reports', label: 'Reports', icon: AlertOctagon },
+    { id: 'payments', label: 'Transactions', icon: CreditCard }
+  ];
+
+  const filteredUsers = data.users.filter(u => 
+    u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8">
-      {/* Sidebar Navigation */}
-      <div className="w-full lg:w-64 flex-shrink-0 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-zinc-800 pb-6 lg:pb-0 lg:pr-6 min-h-0 lg:min-h-[70vh]">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Admin Panel</h2>
-        <nav className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0">
-          {tabs.map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`text-left px-4 py-2.5 rounded-xl capitalize font-semibold transition whitespace-nowrap ${
-                activeTab === tab 
-                  ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400' 
-                  : 'text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-zinc-800'
-              }`}
-            >
-              {tab === 'payments' ? 'transactions' : tab}
-            </button>
-          ))}
-        </nav>
-      </div>
-
+    <div className="w-full">
       {/* Main Content Area */}
-      <div className="flex-1 overflow-x-auto">
+      <div className="flex-1 min-w-0">
+
         {loading ? (
           <Loader size="md" text={`Loading ${activeTab === 'payments' ? 'transactions' : activeTab}...`} />
         ) : (
           <>
             {/* Overview Stats */}
             {activeTab === 'overview' && data.stats && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-                  <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider">Total Users</h3>
-                  <p className="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{data.stats.totalUsers}</p>
-                </div>
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-                  <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider">Total Recipes</h3>
-                  <p className="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{data.stats.totalRecipes}</p>
-                </div>
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-                  <h3 className="text-yellow-600 dark:text-yellow-400 text-sm font-semibold uppercase tracking-wider">Premium Members</h3>
-                  <p className="text-3xl font-extrabold text-yellow-600 dark:text-yellow-400 mt-4">{data.stats.totalPremiumMembers}</p>
-                </div>
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-                  <h3 className="text-red-500 text-sm font-semibold uppercase tracking-wider">Total Reports</h3>
-                  <div>
-                    <p className="text-3xl font-extrabold text-red-500 mt-4">{data.stats.totalReports}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{data.stats.pendingReports} pending resolution</p>
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider">Total Users</h3>
+                    <p className="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{data.stats.totalUsers}</p>
+                  </div>
+                  <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider">Total Recipes</h3>
+                    <p className="text-3xl font-extrabold text-gray-900 dark:text-white mt-4">{data.stats.totalRecipes}</p>
+                  </div>
+                  <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <h3 className="text-yellow-600 dark:text-yellow-400 text-sm font-semibold uppercase tracking-wider">Premium Members</h3>
+                    <p className="text-3xl font-extrabold text-yellow-600 dark:text-yellow-400 mt-4">{data.stats.totalPremiumMembers}</p>
+                  </div>
+                  <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <h3 className="text-red-500 text-sm font-semibold uppercase tracking-wider">Total Reports</h3>
+                    <div>
+                      <p className="text-3xl font-extrabold text-red-500 mt-4">{data.stats.totalReports}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{data.stats.pendingReports} pending resolution</p>
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <h3 className="text-green-600 dark:text-green-400 text-sm font-semibold uppercase tracking-wider">Total Revenue</h3>
+                    <p className="text-3xl font-extrabold text-green-600 dark:text-green-400 mt-4">${data.stats.totalRevenue?.toFixed(2)}</p>
                   </div>
                 </div>
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-                  <h3 className="text-green-600 dark:text-green-400 text-sm font-semibold uppercase tracking-wider">Total Revenue</h3>
-                  <p className="text-3xl font-extrabold text-green-600 dark:text-green-400 mt-4">${data.stats.totalRevenue?.toFixed(2)}</p>
+
+                {/* Recent Activity Section */}
+                <div className="mt-12">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Recent Activity</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Latest Users */}
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm p-5">
+                      <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Latest Users</h4>
+                      <div className="space-y-4">
+                        {data.stats.recentActivity?.users?.map(u => (
+                          <div key={u._id} className="flex justify-between items-center text-sm">
+                            <span className="font-medium text-gray-900 dark:text-white truncate">{u.name}</span>
+                            <span className="text-gray-500 text-xs shrink-0">{new Date(u.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Latest Premium Upgrades */}
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm p-5">
+                      <h4 className="text-sm font-bold text-yellow-600 dark:text-yellow-500 uppercase tracking-wider mb-4">Recent Premium Upgrades</h4>
+                      <div className="space-y-4">
+                        {data.stats.recentActivity?.payments?.map(p => (
+                          <div key={p._id} className="flex justify-between items-center text-sm">
+                            <span className="font-medium text-gray-900 dark:text-white truncate">{p.userName || p.userEmail}</span>
+                            <span className="text-green-600 font-bold shrink-0">${p.amount}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Latest Recipes */}
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm p-5">
+                      <h4 className="text-sm font-bold text-indigo-500 uppercase tracking-wider mb-4">Latest Recipes</h4>
+                      <div className="space-y-4">
+                        {data.stats.recentActivity?.recipes?.map(r => (
+                          <div key={r._id} className="flex flex-col text-sm">
+                            <span className="font-medium text-gray-900 dark:text-white truncate">{r.recipeName}</span>
+                            <span className="text-gray-500 text-xs">by {r.authorName}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Latest Reports */}
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm p-5">
+                      <h4 className="text-sm font-bold text-red-500 uppercase tracking-wider mb-4">Latest Reports</h4>
+                      <div className="space-y-4">
+                        {data.stats.recentActivity?.reports?.map(r => (
+                          <div key={r._id} className="flex justify-between items-center text-sm">
+                            <span className="font-medium text-gray-900 dark:text-white truncate">{r.recipeName}</span>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${r.status === 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'}`}>
+                              {r.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
 
             {/* Users Tab */}
             {activeTab === 'users' && (
-              data.users.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">No users found.</div>
-              ) : (
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-hidden shadow-sm">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700">
-                      <tr>
-                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Name</th>
-                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Email</th>
-                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Role / Plan</th>
-                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.users.map(u => (
-                        <tr key={u.id || u._id} className="border-b border-gray-100 dark:border-zinc-800 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition">
-                          <td className="p-4 text-sm text-gray-700 dark:text-gray-300 font-medium">{u.name}</td>
-                          <td className="p-4 text-sm text-gray-600 dark:text-gray-400">{u.email}</td>
-                          <td className="p-4 text-sm text-gray-600 dark:text-gray-400">
-                            <span className={`px-2 py-0.5 rounded text-xs font-bold ${u.role === 'admin' ? 'bg-red-50 text-red-700 dark:bg-red-900/20' : 'bg-blue-50 text-blue-700 dark:bg-blue-900/20'}`}>
-                              {u.role || 'user'}
-                            </span>
-                            <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold ${(u.isPremium || u.plan === 'premium') ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' : 'bg-gray-100 text-gray-600 dark:bg-zinc-800'}`}>
-                              {(u.isPremium || u.plan === 'premium') ? 'Premium' : 'Free'}
-                            </span>
-                          </td>
-                          <td className="p-4 text-sm">
-                            {u.role !== 'admin' ? (
-                              <button 
-                                onClick={() => handleBlockUser(u.id || u._id, u.isBlocked)}
-                                className={`px-3 py-1.5 rounded-lg text-white text-xs font-semibold cursor-pointer shadow-sm hover:shadow transition ${u.isBlocked ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
-                              >
-                                {u.isBlocked ? '🔓 Unblock' : '🚫 Block'}
-                              </button>
-                            ) : (
-                              <span className="text-xs text-gray-400 font-semibold italic">System Admin</span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    Manage Users
+                  </h3>
+                  <div className="w-full sm:w-72">
+                    <input 
+                      type="text" 
+                      placeholder="Search users by name or email..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-800 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                  </div>
                 </div>
-              )
+                
+                {filteredUsers.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800">
+                    No users found matching your search.
+                  </div>
+                ) : (
+                  <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-x-auto shadow-sm">
+                    <table className="w-full text-left border-collapse min-w-max">
+                      <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700">
+                        <tr>
+                          <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Name</th>
+                          <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Email</th>
+                          <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Role / Plan</th>
+                          <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Reg. Date</th>
+                          <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredUsers.map(u => (
+                          <tr key={u.id || u._id} className="border-b border-gray-100 dark:border-zinc-800 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition">
+                            <td className="p-4 text-sm text-gray-700 dark:text-gray-300 font-medium">{u.name}</td>
+                            <td className="p-4 text-sm text-gray-600 dark:text-gray-400">{u.email}</td>
+                            <td className="p-4 text-sm text-gray-600 dark:text-gray-400">
+                              <span className={`px-2 py-0.5 rounded text-xs font-bold ${u.role === 'admin' ? 'bg-red-50 text-red-700 dark:bg-red-900/20' : 'bg-blue-50 text-blue-700 dark:bg-blue-900/20'}`}>
+                                {u.role || 'user'}
+                              </span>
+                              <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold ${(u.isPremium || u.plan === 'premium') ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' : 'bg-gray-100 text-gray-600 dark:bg-zinc-800'}`}>
+                                {(u.isPremium || u.plan === 'premium') ? 'Premium' : 'Free'}
+                              </span>
+                            </td>
+                            <td className="p-4 text-sm text-gray-500">
+                              {new Date(u.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="p-4 text-sm">
+                              {u.role !== 'admin' ? (
+                                <button 
+                                  onClick={() => handleBlockUser(u.id || u._id, u.isBlocked)}
+                                  className={`px-3 py-1.5 rounded-lg text-white text-xs font-semibold cursor-pointer shadow-sm hover:shadow transition ${u.isBlocked ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                                >
+                                  {u.isBlocked ? '🔓 Unblock' : '🚫 Block'}
+                                </button>
+                              ) : (
+                                <span className="text-xs text-gray-400 font-semibold italic">System Admin</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Recipes Tab */}
             {activeTab === 'recipes' && (
               data.recipes.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">No recipes uploaded yet.</div>
+                <div className="text-center py-12 text-gray-500 bg-white dark:bg-zinc-900 rounded-2xl border">No recipes uploaded yet.</div>
               ) : (
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-hidden shadow-sm">
-                  <table className="w-full text-left border-collapse">
+                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-x-auto shadow-sm">
+                  <table className="w-full text-left border-collapse min-w-max">
                     <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700">
                       <tr>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Recipe</th>
+                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Category</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Author</th>
+                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Likes</th>
+                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Created</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Status</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Actions</th>
                       </tr>
@@ -280,7 +357,10 @@ function AdminDashboardContent() {
                       {data.recipes.map(r => (
                         <tr key={r._id} className="border-b border-gray-100 dark:border-zinc-800 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition">
                           <td className="p-4 text-sm text-gray-700 dark:text-gray-300 font-bold">{r.recipeName}</td>
+                          <td className="p-4 text-sm text-gray-600 dark:text-gray-400">{r.category}</td>
                           <td className="p-4 text-sm text-gray-500 dark:text-gray-400">{r.authorName} <br/><span className="text-xs text-gray-400">{r.authorEmail}</span></td>
+                          <td className="p-4 text-sm font-semibold text-gray-600">{r.likesCount || 0}</td>
+                          <td className="p-4 text-sm text-gray-500">{new Date(r.createdAt).toLocaleDateString()}</td>
                           <td className="p-4 text-sm">
                             {r.isFeatured ? (
                               <span className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Featured ⭐</span>
@@ -319,15 +399,16 @@ function AdminDashboardContent() {
             {/* Reports Tab */}
             {activeTab === 'reports' && (
               data.reports.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">No reports submitted.</div>
+                <div className="text-center py-12 text-gray-500 bg-white dark:bg-zinc-900 rounded-2xl border">No reports submitted.</div>
               ) : (
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-hidden shadow-sm">
-                  <table className="w-full text-left border-collapse">
+                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-x-auto shadow-sm">
+                  <table className="w-full text-left border-collapse min-w-max">
                     <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700">
                       <tr>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Recipe Details</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Reporter</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Reason</th>
+                        <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Date</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Status</th>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">Actions</th>
                       </tr>
@@ -341,6 +422,7 @@ function AdminDashboardContent() {
                           </td>
                           <td className="p-4 text-sm text-gray-600 dark:text-gray-400">{r.reporterEmail}</td>
                           <td className="p-4 text-sm text-red-600 dark:text-red-400 font-medium">{r.reason}</td>
+                          <td className="p-4 text-sm text-gray-500">{new Date(r.createdAt).toLocaleDateString()}</td>
                           <td className="p-4 text-sm">
                             <span className={`px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider ${
                               r.status === 'pending' 
@@ -379,8 +461,8 @@ function AdminDashboardContent() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">There are no payment logs recorded in the payments collection yet.</p>
                 </div>
               ) : (
-                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-hidden shadow-sm">
-                  <table className="w-full text-left border-collapse">
+                <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-x-auto shadow-sm">
+                  <table className="w-full text-left border-collapse min-w-max">
                     <thead className="bg-gray-50 dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700">
                       <tr>
                         <th className="p-4 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">User</th>
@@ -394,8 +476,8 @@ function AdminDashboardContent() {
                       {data.payments.map(p => (
                         <tr key={p._id} className="border-b border-gray-100 dark:border-zinc-800 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition">
                           <td className="p-4 text-sm text-gray-700 dark:text-gray-300 font-medium">
-                            {p.userEmail}
-                            <br/><span className="text-xs text-gray-400 font-mono">ID: {p.userId}</span>
+                            <span className="font-bold">{p.userName || 'Unknown User'}</span>
+                            <br/><span className="text-xs text-gray-500">{p.userEmail}</span>
                           </td>
                           <td className="p-4 text-sm text-green-600 dark:text-green-400 font-bold">${p.amount?.toFixed(2)}</td>
                           <td className="p-4 text-sm">

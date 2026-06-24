@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useSession } from '@/lib/auth-client';
 
 export default function HomePage() {
+  const { data: session } = useSession();
   const [featured, setFeatured] = useState([]);
   const [popular, setPopular] = useState([]);
 
@@ -170,16 +172,34 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Static Section 2: Premium CTA */}
-      <section className="py-24 bg-gradient-to-br from-gray-900 to-black text-white text-center px-6">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">Unlock Unlimited Possibilities</h2>
-          <p className="text-gray-400 text-lg mb-10">Normal users can only upload up to 2 recipes. Upgrade to Premium to share unlimited recipes, get a premium badge, and access exclusive content.</p>
-          <Link href="/dashboard" className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-xl">
-            Upgrade to Premium Now
-          </Link>
-        </motion.div>
-      </section>
+      {/* Static Section 2: Premium CTA or Admin Dashboard */}
+      {session?.user?.role === 'admin' ? (
+        <section className="py-24 bg-gradient-to-br from-indigo-900 to-black text-white text-center px-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="max-w-3xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-6">System Administration</h2>
+            <p className="text-indigo-200 text-lg mb-10">Welcome back, Admin. Access your management dashboard to oversee users, monitor platform activity, and manage recipes and reports.</p>
+            <Link href="/dashboard/admin" className="bg-indigo-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition shadow-xl border border-indigo-500">
+              Go to Admin Dashboard
+            </Link>
+          </motion.div>
+        </section>
+      ) : (
+        <section className="py-24 bg-gradient-to-br from-gray-900 to-black text-white text-center px-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="max-w-3xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-6">Unlock Unlimited Possibilities</h2>
+            <p className="text-gray-400 text-lg mb-10">Normal users can only upload up to 2 recipes. Upgrade to Premium to share unlimited recipes, get a premium badge, and access exclusive content.</p>
+            {session?.user?.isPremium || session?.user?.plan === 'premium' ? (
+              <div className="inline-block bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 px-8 py-4 rounded-full font-bold text-lg shadow-xl">
+                ⭐ You are a Premium Member
+              </div>
+            ) : (
+              <Link href="/dashboard" className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-xl">
+                Upgrade to Premium Now
+              </Link>
+            )}
+          </motion.div>
+        </section>
+      )}
     </div>
   );
 }

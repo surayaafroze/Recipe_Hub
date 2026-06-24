@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { useSession } from '@/lib/auth-client';
 
 export default function AddRecipePage() {
+  const { data: session } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -125,7 +127,7 @@ export default function AddRecipePage() {
       </div>
 
       {/* Recipe Limit Banner */}
-      {!limitLoading && (
+      {!limitLoading && session?.user?.role !== 'admin' && (
         !recipeLimit.isPremium && recipeLimit.limit !== null ? (
           <div className={`mb-6 p-4 rounded-xl border flex items-center justify-between gap-4 flex-wrap ${
             recipeLimit.canAdd
