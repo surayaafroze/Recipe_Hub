@@ -43,12 +43,15 @@ export default function ProfilePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+    const toastId = toast.loading('Updating profile...');
     try {
       let imageUrl = profile.image;
       if (imageFile) {
+        toast.loading('Uploading profile image...', { id: toastId });
         imageUrl = await uploadToImgbb(imageFile);
       }
 
+      toast.loading('Saving profile changes...', { id: toastId });
       const res = await fetch('http://localhost:5000/api/users/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -59,15 +62,15 @@ export default function ProfilePage() {
       if (res.ok) {
         // Sync changes with Better Auth so navbar reflects immediately
         await authClient.updateUser({ image: imageUrl, name: profile.name });
-        toast.success('Profile updated successfully!');
+        toast.success('Profile updated successfully! 🎉', { id: toastId });
         setProfile(prev => ({ ...prev, image: imageUrl }));
         setImageFile(null);
       } else {
         const err = await res.json();
-        toast.error(err.error || 'Failed to update profile');
+        toast.error(err.error || 'Failed to update profile', { id: toastId });
       }
     } catch (err) {
-      toast.error('Error updating profile');
+      toast.error('Error updating profile', { id: toastId });
     } finally {
       setSaving(false);
     }

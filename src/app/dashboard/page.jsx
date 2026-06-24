@@ -35,6 +35,7 @@ export default function DashboardPage() {
 
   const handleUpgrade = async () => {
     setLoading(true);
+    const toastId = toast.loading('Initializing premium upgrade...');
     try {
       const res = await fetch('http://localhost:5000/api/payments/create-checkout-session', {
         method: 'POST',
@@ -42,12 +43,13 @@ export default function DashboardPage() {
       });
       const data = await res.json();
       if (data.url) {
+        toast.success('Redirecting to secure Stripe payment...', { id: toastId });
         window.location.href = data.url; 
       } else {
-        toast.error(data.error || 'Failed to initialize checkout');
+        toast.error(data.error || 'Failed to initialize checkout', { id: toastId });
       }
     } catch (error) {
-      toast.error('Network error');
+      toast.error('Network error during checkout', { id: toastId });
     } finally {
       setLoading(false);
     }

@@ -58,53 +58,81 @@ export default function AdminDashboard() {
   };
 
   const handleBlockUser = async (userId, isBlocked) => {
-    const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ isBlocked: !isBlocked })
-    });
-    if (res.ok) {
-      toast.success(isBlocked ? 'User unblocked' : 'User blocked');
-      fetchData();
+    const toastId = toast.loading('Updating user status...');
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ isBlocked: !isBlocked })
+      });
+      if (res.ok) {
+        toast.success(isBlocked ? 'User unblocked successfully! 🎉' : 'User blocked successfully! 🚫', { id: toastId });
+        fetchData();
+      } else {
+        toast.error('Failed to update user status', { id: toastId });
+      }
+    } catch {
+      toast.error('Network error updating user status', { id: toastId });
     }
   };
 
   const handleFeatureRecipe = async (recipeId, isFeatured) => {
-    const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}/feature`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ isFeatured: !isFeatured })
-    });
-    if (res.ok) {
-      toast.success(isFeatured ? 'Recipe unfeatured' : 'Recipe featured');
-      fetchData();
+    const toastId = toast.loading('Updating recipe feature status...');
+    try {
+      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}/feature`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ isFeatured: !isFeatured })
+      });
+      if (res.ok) {
+        toast.success(isFeatured ? 'Recipe unfeatured successfully!' : 'Recipe featured successfully! ⭐', { id: toastId });
+        fetchData();
+      } else {
+        toast.error('Failed to update feature status', { id: toastId });
+      }
+    } catch {
+      toast.error('Network error updating feature status', { id: toastId });
     }
   };
 
   const handleDeleteRecipe = async (recipeId) => {
     if (!confirm('Delete this recipe?')) return;
-    const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    if (res.ok) {
-      toast.success('Recipe deleted');
-      fetchData();
+    const toastId = toast.loading('Deleting recipe...');
+    try {
+      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        toast.success('Recipe deleted successfully! 🗑️', { id: toastId });
+        fetchData();
+      } else {
+        toast.error('Failed to delete recipe', { id: toastId });
+      }
+    } catch {
+      toast.error('Network error deleting recipe', { id: toastId });
     }
   };
 
   const handleReportStatus = async (reportId, status) => {
-    const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ status })
-    });
-    if (res.ok) {
-      toast.success('Status updated');
-      fetchData();
+    const toastId = toast.loading('Updating report status...');
+    try {
+      const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        toast.success(`Report resolved: ${status}!`, { id: toastId });
+        fetchData();
+      } else {
+        toast.error('Failed to update report status', { id: toastId });
+      }
+    } catch {
+      toast.error('Network error updating report status', { id: toastId });
     }
   };
 

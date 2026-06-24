@@ -16,6 +16,7 @@ export default function ReportModal({ isOpen, onClose, recipeId, recipeName }) {
     }
     
     setLoading(true);
+    const toastId = toast.loading('Submitting report...');
     try {
       const res = await fetch('http://localhost:5000/api/reports', {
         method: 'POST',
@@ -25,14 +26,14 @@ export default function ReportModal({ isOpen, onClose, recipeId, recipeName }) {
       });
       
       if (res.ok) {
-        toast.success('Report submitted successfully');
+        toast.success('Report submitted successfully! 🚩', { id: toastId });
         onClose();
       } else {
         const data = await res.json();
-        toast.error(data.error || 'Failed to submit report');
+        toast.error(data.error || 'Failed to submit report', { id: toastId });
       }
     } catch (err) {
-      toast.error('An error occurred');
+      toast.error('An error occurred while submitting report', { id: toastId });
     } finally {
       setLoading(false);
     }

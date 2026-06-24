@@ -135,6 +135,7 @@ export default function RecipeDetailsPage() {
   const handlePurchase = async () => {
     if (!requireLogin('purchase recipes')) return;
     setPurchasing(true);
+    const toastId = toast.loading('Initializing checkout...');
     try {
       const res = await fetch('http://localhost:5000/api/payments/purchase-recipe', {
         method: 'POST',
@@ -144,12 +145,13 @@ export default function RecipeDetailsPage() {
       });
       const data = await res.json();
       if (data.url) {
+        toast.success('Redirecting to secure Stripe payment...', { id: toastId });
         window.location.href = data.url;
       } else {
-        toast.error(data.error || 'Checkout failed');
+        toast.error(data.error || 'Checkout initialization failed', { id: toastId });
       }
     } catch (err) {
-      toast.error('Network error');
+      toast.error('Network error during checkout', { id: toastId });
     } finally {
       setPurchasing(false);
     }

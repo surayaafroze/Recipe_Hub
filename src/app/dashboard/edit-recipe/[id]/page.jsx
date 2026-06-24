@@ -93,14 +93,15 @@ export default function EditRecipePage() {
     }
 
     setLoading(true);
+    const toastId = toast.loading('Updating recipe...');
     try {
       let finalRecipeImage = formData.recipeImage;
       if (imageFile) {
-        toast.loading('Uploading new image...', { id: 'imgupload' });
+        toast.loading('Uploading new recipe image...', { id: toastId });
         finalRecipeImage = await uploadToImgbb(imageFile);
-        toast.dismiss('imgupload');
       }
 
+      toast.loading('Saving changes...', { id: toastId });
       const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -111,13 +112,13 @@ export default function EditRecipePage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success('Recipe updated successfully! 🎉');
+        toast.success('Recipe updated successfully! 🎉', { id: toastId });
         router.push('/dashboard/my-recipes');
       } else {
-        toast.error(data.error || 'Failed to update recipe');
+        toast.error(data.error || 'Failed to update recipe', { id: toastId });
       }
     } catch (error) {
-      toast.error('Network error. Please try again.');
+      toast.error('Network error. Please try again.', { id: toastId });
     } finally {
       setLoading(false);
     }

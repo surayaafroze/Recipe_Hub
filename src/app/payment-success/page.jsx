@@ -2,6 +2,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -27,11 +28,17 @@ function PaymentSuccessContent() {
 
         if (res.ok) {
           setStatus('success');
+          toast.success(type === 'recipe' 
+            ? 'Recipe purchased successfully! 🎉' 
+            : 'Premium membership activated! Welcome to Premium! ⭐'
+          );
         } else {
           setStatus('error');
+          toast.error('Payment verification failed.');
         }
       } catch {
         setStatus('error');
+        toast.error('Network error verifying payment.');
       }
     };
 

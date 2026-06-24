@@ -38,12 +38,15 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
+    const toastId = toast.loading('Creating account...');
     try {
       let imageUrl = '';
       if (imageFile) {
+        toast.loading('Uploading profile image...', { id: toastId });
         imageUrl = await uploadToImgbb(imageFile);
       }
 
+      toast.loading('Registering user details...', { id: toastId });
       await signUp.email({
         email: formData.email,
         password: formData.password,
@@ -52,16 +55,16 @@ export default function RegisterPage() {
         fetchOptions: {
           onResponse: (ctx) => {
             if (ctx.response.ok) {
-              toast.success('Registration successful! Welcome.');
+              toast.success('Registration successful! Welcome 🎉', { id: toastId });
               router.push('/dashboard');
             } else {
-              toast.error(ctx.error?.message || 'Registration failed');
+              toast.error(ctx.error?.message || 'Registration failed', { id: toastId });
             }
           }
         }
       });
     } catch (error) {
-      toast.error('An unexpected error occurred');
+      toast.error('An unexpected error occurred', { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -69,6 +72,7 @@ export default function RegisterPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      toast.loading('Redirecting to Google...');
       await signIn.social({
         provider: 'google',
         callbackURL: '/dashboard'

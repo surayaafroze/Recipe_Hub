@@ -14,23 +14,24 @@ export default function LoginPage() {
   const handleCredentialLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const toastId = toast.loading('Signing in...');
     try {
-      const result = await signIn.email({
+      await signIn.email({
         email,
         password,
         fetchOptions: {
           onResponse: (ctx) => {
             if (ctx.response.ok) {
-              toast.success('Login successful!');
+              toast.success('Login successful! Welcome back 🎉', { id: toastId });
               router.push('/dashboard');
             } else {
-              toast.error(ctx.error?.message || 'Login failed');
+              toast.error(ctx.error?.message || 'Login failed', { id: toastId });
             }
           }
         }
       });
     } catch (error) {
-      toast.error('An unexpected error occurred');
+      toast.error('An unexpected error occurred', { id: toastId });
     } finally {
       setLoading(false);
     }
@@ -38,6 +39,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      toast.loading('Redirecting to Google...');
       await signIn.social({
         provider: 'google',
         callbackURL: '/dashboard'

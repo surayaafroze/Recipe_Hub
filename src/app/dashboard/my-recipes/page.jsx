@@ -29,19 +29,20 @@ export default function MyRecipesPage() {
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this recipe?')) return;
+    const toastId = toast.loading('Deleting recipe...');
     try {
       const res = await fetch(`http://localhost:5000/api/recipes/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
       if (res.ok) {
-        toast.success('Recipe deleted');
+        toast.success('Recipe deleted successfully! 🗑️', { id: toastId });
         setRecipes(recipes.filter(r => r._id !== id));
       } else {
-        toast.error('Failed to delete recipe');
+        toast.error('Failed to delete recipe', { id: toastId });
       }
     } catch (err) {
-      toast.error('Network error');
+      toast.error('Network error', { id: toastId });
     }
   };
 

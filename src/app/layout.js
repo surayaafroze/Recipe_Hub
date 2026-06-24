@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import Navbar from "../components/Navbar";
 import Footer from "../components/shared/Footer";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,17 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-black text-black dark:text-white transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              style: {
+                borderRadius: '12px',
+                background: 'var(--background)',
+                color: 'var(--foreground)',
+                border: '1px solid var(--border-color, rgba(0,0,0,0.05))',
+              },
+            }}
+          />
           <Navbar />
           <main className="flex-grow">{children}</main>
           <Footer />

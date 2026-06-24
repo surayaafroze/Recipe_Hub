@@ -84,14 +84,15 @@ export default function AddRecipePage() {
     }
 
     setLoading(true);
+    const toastId = toast.loading('Publishing recipe...');
     try {
       let recipeImage = '';
       if (imageFile) {
-        toast.loading('Uploading image...', { id: 'imgupload' });
+        toast.loading('Uploading recipe image...', { id: toastId });
         recipeImage = await uploadToImgbb(imageFile);
-        toast.dismiss('imgupload');
       }
 
+      toast.loading('Saving recipe details...', { id: toastId });
       const res = await fetch('http://localhost:5000/api/recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,13 +103,13 @@ export default function AddRecipePage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast.success('Recipe published successfully! 🎉');
+        toast.success('Recipe published successfully! 🎉', { id: toastId });
         router.push('/dashboard/my-recipes');
       } else {
-        toast.error(data.error || 'Failed to add recipe');
+        toast.error(data.error || 'Failed to add recipe', { id: toastId });
       }
     } catch (error) {
-      toast.error('Network error. Please try again.');
+      toast.error('Network error. Please try again.', { id: toastId });
     } finally {
       setLoading(false);
     }
