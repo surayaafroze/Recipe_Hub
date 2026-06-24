@@ -1,220 +1,159 @@
-# 🍳 RecipeHub — Recipe Sharing Platform
+<div align="center">
+  <h1>🍳 RecipeHub</h1>
+  <p><strong>A Modern, Feature-Rich Recipe Sharing Platform</strong></p>
+  
+  [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)](https://react.dev/)
+  [![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+  [![Stripe](https://img.shields.io/badge/Stripe-Payments-6772E5?style=for-the-badge&logo=stripe)](https://stripe.com/)
+  [![Better Auth](https://img.shields.io/badge/Better_Auth-Security-green?style=for-the-badge)](https://better-auth.com/)
+</div>
 
-A full-stack recipe sharing platform where food enthusiasts can create, share, discover, and manage recipes.
+<br />
 
-[![Live Site](https://img.shields.io/badge/Live-RecipeHub-indigo)](http://localhost:3000)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)](https://mongodb.com)
+<div align="center">
+  <img src="./public/admin_overview.png" alt="Admin Dashboard Overview" width="100%" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+</div>
 
----
+<br />
 
-## 🚀 Features
+## 🌐 Live Site Link
+*(Add your deployment link here)*
 
-### 👤 User Features
-- 📝 **Recipe Management** — Create (max 2), update, and delete own recipes
-- 🔍 **Browse & Filter** — Browse all recipes, filter by category (server-side with MongoDB `$in`)
-- ❤️ **Likes & Favorites** — Like recipes, save to personal favorites list
-- 💳 **Stripe Payments** — Purchase individual recipes or upgrade to Premium
-- ⭐ **Premium Membership** — Unlimited recipe creation + premium badge
-- 📊 **Dashboard Overview** — View stats (total recipes, favorites, likes received)
-- 🧑‍💼 **Profile Management** — Update name and profile image
+## 📖 Project Overview
+RecipeHub is a comprehensive and interactive full-stack web application designed for food enthusiasts to discover, share, and manage recipes. The platform provides a seamless user experience with robust authentication, role-based access control, premium membership features via Stripe, and an intuitive admin dashboard for complete platform management. 
 
-### 🛡️ Admin Features
-- 👥 **User Management** — View all users, block/unblock accounts
-- 🍲 **Recipe Management** — Delete any recipe, mark as Featured
-- 🚩 **Reports** — Review reported recipes, dismiss or remove
-- 📊 **Platform Stats** — Total users, recipes, premium members, revenue
-- 💰 **Transactions** — View all payment history
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 16, React, Tailwind CSS, Framer Motion |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB Atlas |
-| **Auth** | Better Auth (session-based, Google OAuth) |
-| **Payments** | Stripe Checkout |
-| **Image Upload** | ImgBB API |
-| **Icons** | Lucide React |
-| **Toasts** | React Hot Toast |
+It is built with a modern tech stack focusing on performance, responsive design, and an excellent user interface utilizing Next.js 15, React 19, and Tailwind CSS.
 
 ---
 
-## 📁 Project Structure
+## ✨ Features
 
-```
+### User Features
+- **Recipe Discovery**: Browse and search through a rich collection of recipes.
+- **Recipe Management**: Create, edit, and delete personal recipes.
+- **Favorites System**: Save and remove recipes from a personalized favorites list.
+- **Reporting**: Report inappropriate recipes or users to the admin team.
+- **Dark/Light Mode**: Full theme switching support for better accessibility.
+- **Profile Dashboard**: Manage personal information and view added/favorite recipes.
+- **Interactive UI**: Micro-animations and responsive design using Framer Motion.
+- **Toast Notifications**: Real-time feedback for all actions (React Hot Toast).
+
+### Admin Features
+- **Dynamic Dashboard**: View real-time statistics (Total Users, Recipes, Premium Members, Reports, Revenue).
+- **User Management**: View all users, and block/unblock accounts to restrict access.
+- **Recipe Management**: View, edit, feature, and delete any recipe on the platform.
+- **Transactions**: Monitor premium membership payments and revenue.
+- **Reports Management**: Review and resolve user-submitted reports.
+- **Role-Based Redirection**: Dedicated secure routing and layout for administrators.
+
+### 🛡️ Authentication
+- **Better Auth Integration**: Secure, modern authentication handling.
+- **Google Login**: One-click OAuth login via Google.
+- **Email/Password**: Standard secure registration and login.
+- **Protected Routes**: Next.js Middleware strictly protects `/dashboard` and `/admin` routes.
+- **Session Handling**: Persistent secure sessions across the application.
+
+### 💎 Premium Features
+- **Stripe Checkout**: Seamless payment integration for premium upgrades.
+- **Unlimited Recipes**: Premium members can bypass the standard recipe creation limits.
+- **Exclusive Badge**: Visual recognition across the platform for premium users.
+- **Instant Activation**: Immediate premium status update upon successful payment.
+
+---
+
+## 💻 Tech Stack
+- **Framework**: Next.js 15 (App Router)
+- **Library**: React 19
+- **Styling**: Tailwind CSS, Next Themes
+- **Authentication**: Better Auth
+- **State Management / Forms**: React Hook Form, Zod (Validation)
+- **Animations**: Framer Motion
+- **Payments**: Stripe
+- **Notifications**: React Hot Toast
+- **Icons**: Lucide React
+
+### Major NPM Packages
+- `@better-auth/mongo-adapter`
+- `@stripe/stripe-js`
+- `axios`
+- `framer-motion`
+- `react-hook-form`
+- `react-hot-toast`
+- `zod`
+
+---
+
+## 📂 Folder Structure Overview
+```text
 recipe-hub/
 ├── src/
-│   ├── app/
-│   │   ├── (public routes)
-│   │   │   ├── page.js               # Home page
-│   │   │   ├── browse-recipes/       # Browse & filter recipes
-│   │   │   ├── recipe/[id]/          # Recipe details
-│   │   │   ├── login/                # Login page
-│   │   │   └── register/             # Registration page
-│   │   ├── dashboard/
-│   │   │   ├── page.jsx              # Dashboard overview
-│   │   │   ├── add-recipe/           # Add new recipe
-│   │   │   ├── my-recipes/           # Manage own recipes
-│   │   │   ├── favorites/            # Favorite recipes
-│   │   │   ├── purchased-recipes/    # Purchased recipes
-│   │   │   ├── profile/              # Profile management
-│   │   │   └── admin/                # Admin panel
-│   │   ├── payment-success/          # Stripe success page
-│   │   ├── blocked/                  # Blocked account page
-│   │   ├── api/auth/                 # Better Auth API routes
-│   │   ├── not-found.jsx             # Custom 404 page
-│   │   ├── loading.jsx               # Global loading state
-│   │   └── error.jsx                 # Error boundary
-│   ├── components/
-│   │   ├── Navbar.jsx                # Responsive navbar with theme toggle
-│   │   ├── ThemeToggle.jsx           # Dark/Light mode switch
-│   │   ├── dashboard/DashboardStats.jsx
-│   │   ├── modals/ReportModal.jsx
-│   │   └── shared/Footer.jsx
-│   ├── lib/
-│   │   ├── auth.js                   # Better Auth server config
-│   │   └── auth-client.js            # Better Auth client config
-│   └── middleware.js                 # Next.js route protection middleware
-├── .env                              # Environment variables (NOT committed)
-├── .gitignore
-└── README.md
+│   ├── app/                 # Next.js App Router pages and API routes
+│   │   ├── (auth)/          # Login, Register pages
+│   │   ├── dashboard/       # User & Admin dashboards
+│   │   ├── recipe/          # Recipe details and dynamic routes
+│   │   └── api/             # Next.js backend/auth routes
+│   ├── components/          # Reusable UI components
+│   │   ├── shared/          # Navbar, Footer, Loader
+│   │   └── dashboard/       # Dashboard specific components
+│   ├── lib/                 # Utility functions, Auth config, DB setup
+│   └── middleware.js        # Route protection and role verification
+├── public/                  # Static assets
+├── tailwind.config.js       # Tailwind configuration
+└── package.json             # Dependencies and scripts
 ```
 
 ---
 
-## ⚙️ Environment Variables
+## 🔐 Environment Setup
 
-Create a `.env` file in the project root:
+Environment variables are required for:
+- Authentication
+- MongoDB
+- Google OAuth
+- Image Upload Service
+- Stripe Payments
 
-```env
-# Better Auth
-BETTER_AUTH_SECRET=your_secret_here
-BETTER_AUTH_URL=http://localhost:3000
-
-# MongoDB
-MONGO_DB_URI=mongodb+srv://user:password@cluster.mongodb.net/
-AUTH_DB_NAME=Recipe_Hub
-
-# Google OAuth
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# Public Environment Variables
-NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-NEXT_PUBLIC_SERVER_URL=http://localhost:5000
-NEXT_PUBLIC_IMGBB_UPLOAD_API=your_imgbb_api_key
-
-# Stripe
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_SECRET_KEY=sk_test_...
-```
-
-> ⚠️ **Never commit `.env` to version control!**
+Please configure the required environment variables locally before running the project.
 
 ---
 
-## 🏃‍♂️ Getting Started
+## 🚀 Installation Guide
 
-### Prerequisites
-- Node.js 18+
-- MongoDB Atlas account
-- Stripe account (for payments)
-- Google OAuth credentials
-- ImgBB API key
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/Recipe_Hub.git
+   cd Recipe_Hub/recipe-hub
+   ```
 
-### Installation
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-# Clone the repository
-git clone https://github.com/surayaafroze/Recipe_Hub.git
-cd Recipe_Hub
-
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env
-# Fill in your values in .env
-
-# Run development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+3. **Run the Development Server**
+   ```bash
+   npm run dev
+   ```
+   The application will start on `http://localhost:3000`.
 
 ---
 
-## 🔐 Authentication
-
-RecipeHub uses **Better Auth** for secure, session-based authentication.
-
-- **Credential Login** — Email + password
-- **Google OAuth** — One-click Google sign-in
-- **HTTP-only Cookies** — Session tokens stored securely, never exposed to JavaScript
-- **Route Protection** — Next.js middleware guards all `/dashboard/*` routes
-- **RBAC** — Role-based access control (User / Admin)
+## 📱 Responsive Design
+The platform is fully responsive and optimized for:
+- Desktop & Laptops
+- Tablets (iPad, etc.)
+- Mobile Devices (Seamless navigation, touch-friendly interfaces, and adaptive grid layouts)
 
 ---
 
-## 💳 Premium Membership
+## 🚀 Future Improvements
+- AI-based Recipe Recommendations.
+- Social features: Comments, User Follows, and Activity Feeds.
+- Weekly Meal Planner integration.
+- Export recipes to PDF.
 
-Users can upgrade to **Premium** for **$15.00** via Stripe Checkout:
-
-| Feature | Free User | Premium User |
-|---|---|---|
-| Recipe Creation | Max 2 | Unlimited |
-| Premium Badge | ❌ | ✅ |
-| Browse Recipes | ✅ | ✅ |
-| Favorites | ✅ | ✅ |
-| Recipe Purchase | ✅ | ✅ |
-
----
-
-## 📊 Database Collections
-
-| Collection | Purpose |
-|---|---|
-| `users` | User profiles + roles + premium status |
-| `recipes` | All recipes with metadata |
-| `favorites` | User → Recipe favorite mappings |
-| `reports` | Recipe reports from users |
-| `payments` | Stripe payment transactions |
-
----
-
-## 🔒 Security
-
-- ✅ MongoDB credentials stored in environment variables only
-- ✅ `.env` excluded from Git via `.gitignore`  
-- ✅ HTTP-only session cookies (not accessible by JS)
-- ✅ All protected API routes require authentication
-- ✅ Admin routes require `role === 'admin'`
-- ✅ Blocked users denied access to all protected routes
-- ✅ CORS configured with `credentials: true` and specific origin
-
----
-
-## 🌐 Deployment
-
-The application is deployed and accessible at the live URL. For production:
-
-1. Set `BETTER_AUTH_URL` and `NEXT_PUBLIC_BETTER_AUTH_URL` to your production domain
-2. Set `CLIENT_URL` in the backend to your production domain
-3. Update CORS origin in backend `index.js`
-4. Ensure MongoDB Atlas IP whitelist includes your server IP
-5. Set `NODE_ENV=production`
-
----
-
-## 📝 License
-
-This project is for educational assessment purposes.
-
----
-
-*Built with ❤️ for RecipeHub Platform Assessment*
+<br />
+<div align="center">
+  <p>Built with ❤️ for Recipe Hub</p>
+</div>
