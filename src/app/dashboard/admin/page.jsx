@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import { useSession } from '../../../lib/auth-client';
+import { getValidToken } from '../../../lib/auth-client';
 import toast from 'react-hot-toast';
 
 export default function AdminDashboard() {
@@ -7,7 +9,7 @@ export default function AdminDashboard() {
   const [data, setData] = useState({ stats: null, users: [], recipes: [], reports: [], payments: [] });
   const [loading, setLoading] = useState(true);
 
-  const fetchToken = () => typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
+
 
   useEffect(() => {
     fetchData();
@@ -16,7 +18,7 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const token = fetchToken();
+      const token = await getValidToken();
       const headers = { 'Authorization': `Bearer ${token}` };
 
       if (activeTab === 'overview') {
@@ -58,9 +60,10 @@ export default function AdminDashboard() {
   };
 
   const handleBlockUser = async (userId, isBlocked) => {
+    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fetchToken()}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ isBlocked: !isBlocked })
     });
     if (res.ok) {
@@ -70,9 +73,10 @@ export default function AdminDashboard() {
   };
 
   const handleFeatureRecipe = async (recipeId, isFeatured) => {
+    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}/feature`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fetchToken()}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ isFeatured: !isFeatured })
     });
     if (res.ok) {
@@ -83,9 +87,10 @@ export default function AdminDashboard() {
 
   const handleDeleteRecipe = async (recipeId) => {
     if (!confirm('Delete this recipe?')) return;
+    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${fetchToken()}` }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
     if (res.ok) {
       toast.success('Recipe deleted');
@@ -94,9 +99,10 @@ export default function AdminDashboard() {
   };
 
   const handleReportStatus = async (reportId, status) => {
+    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fetchToken()}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status })
     });
     if (res.ok) {

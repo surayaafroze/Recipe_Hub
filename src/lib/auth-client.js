@@ -7,3 +7,20 @@ export const authClient = createAuthClient({
 });
 
 export const { signIn, signUp, useSession } = authClient;
+
+export const getValidToken = async () => {
+  if (typeof window === 'undefined') return '';
+  let token = localStorage.getItem('token');
+  if (!token) {
+    try {
+      const { data } = await authClient.jwt();
+      token = data?.jwt || '';
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+    } catch (e) {
+      console.error('Error fetching JWT', e);
+    }
+  }
+  return token;
+};
