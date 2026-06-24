@@ -88,7 +88,21 @@ export default function ProfilePage() {
             {imageFile ? (
               <img src={URL.createObjectURL(imageFile)} alt="Preview" className="w-full h-full object-cover" />
             ) : profile.image ? (
-              <img src={profile.image} alt="Profile" className="w-full h-full object-cover" />
+              <>
+                <img 
+                  src={profile.image} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover" 
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div className="w-full h-full hidden items-center justify-center text-gray-400 font-bold text-2xl">
+                  {profile.name?.charAt(0)?.toUpperCase()}
+                </div>
+              </>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-2xl">
                 {profile.name?.charAt(0)?.toUpperCase()}
