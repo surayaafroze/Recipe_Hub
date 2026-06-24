@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useSession } from '../../../lib/auth-client';
-import { getValidToken } from '../../../lib/auth-client';
 import toast from 'react-hot-toast';
 
 export default function AdminDashboard() {
@@ -18,35 +17,34 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const token = await getValidToken();
-      const headers = { 'Authorization': `Bearer ${token}` };
+      const opts = { credentials: 'include' };
 
       if (activeTab === 'overview') {
-        const res = await fetch('http://localhost:5000/api/admin/stats', { headers });
+        const res = await fetch('http://localhost:5000/api/admin/stats', opts);
         if (res.ok) {
           const stats = await res.json();
           setData(prev => ({ ...prev, stats }));
         }
       } else if (activeTab === 'users') {
-        const res = await fetch('http://localhost:5000/api/admin/users', { headers });
+        const res = await fetch('http://localhost:5000/api/admin/users', opts);
         if (res.ok) {
           const users = await res.json();
           setData(prev => ({ ...prev, users }));
         }
       } else if (activeTab === 'recipes') {
-        const res = await fetch('http://localhost:5000/api/recipes?limit=50', { headers });
+        const res = await fetch('http://localhost:5000/api/recipes?limit=50', opts);
         if (res.ok) {
            const { recipes } = await res.json();
            setData(prev => ({ ...prev, recipes }));
         }
       } else if (activeTab === 'reports') {
-        const res = await fetch('http://localhost:5000/api/reports', { headers });
+        const res = await fetch('http://localhost:5000/api/reports', opts);
         if (res.ok) {
           const reports = await res.json();
           setData(prev => ({ ...prev, reports }));
         }
       } else if (activeTab === 'payments') {
-        const res = await fetch('http://localhost:5000/api/admin/payments', { headers });
+        const res = await fetch('http://localhost:5000/api/admin/payments', opts);
         if (res.ok) {
           const payments = await res.json();
           setData(prev => ({ ...prev, payments }));
@@ -60,10 +58,10 @@ export default function AdminDashboard() {
   };
 
   const handleBlockUser = async (userId, isBlocked) => {
-    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ isBlocked: !isBlocked })
     });
     if (res.ok) {
@@ -73,10 +71,10 @@ export default function AdminDashboard() {
   };
 
   const handleFeatureRecipe = async (recipeId, isFeatured) => {
-    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}/feature`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ isFeatured: !isFeatured })
     });
     if (res.ok) {
@@ -87,10 +85,9 @@ export default function AdminDashboard() {
 
   const handleDeleteRecipe = async (recipeId) => {
     if (!confirm('Delete this recipe?')) return;
-    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      credentials: 'include',
     });
     if (res.ok) {
       toast.success('Recipe deleted');
@@ -99,10 +96,10 @@ export default function AdminDashboard() {
   };
 
   const handleReportStatus = async (reportId, status) => {
-    const token = await getValidToken();
     const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ status })
     });
     if (res.ok) {

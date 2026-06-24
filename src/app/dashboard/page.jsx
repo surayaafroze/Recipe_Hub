@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import DashboardStats from '../../components/dashboard/DashboardStats';
-import { getValidToken } from '../../lib/auth-client';
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
@@ -20,9 +19,8 @@ export default function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const token = await getValidToken();
       const res = await fetch('http://localhost:5000/api/users/dashboard-stats', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
@@ -38,12 +36,9 @@ export default function DashboardPage() {
   const handleUpgrade = async () => {
     setLoading(true);
     try {
-      const token = await getValidToken();
       const res = await fetch('http://localhost:5000/api/payments/create-checkout-session', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        credentials: 'include',
       });
       const data = await res.json();
       if (data.url) {

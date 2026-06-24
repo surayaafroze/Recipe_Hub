@@ -2,13 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { getValidToken } from '../../../lib/auth-client';
 
 export default function MyRecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-
-
 
   useEffect(() => {
     fetchMyRecipes();
@@ -16,9 +13,8 @@ export default function MyRecipesPage() {
 
   const fetchMyRecipes = async () => {
     try {
-      const token = await getValidToken();
       const res = await fetch('http://localhost:5000/api/recipes/my-recipes', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
@@ -34,10 +30,9 @@ export default function MyRecipesPage() {
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this recipe?')) return;
     try {
-      const token = await getValidToken();
       const res = await fetch(`http://localhost:5000/api/recipes/${id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include',
       });
       if (res.ok) {
         toast.success('Recipe deleted');

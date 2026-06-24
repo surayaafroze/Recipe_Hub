@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { getValidToken } from '../../../lib/auth-client';
 
 export default function AddRecipePage() {
   const router = useRouter();
@@ -50,13 +49,12 @@ export default function AddRecipePage() {
         recipeImage
       };
 
-      const token = await getValidToken();
       const res = await fetch('http://localhost:5000/api/recipes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify(payload)
       });
 
