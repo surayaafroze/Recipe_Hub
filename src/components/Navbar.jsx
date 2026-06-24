@@ -75,8 +75,8 @@ export default function Navbar() {
                   <span>Profile</span>
                 </Link>
                 
-                <Link href="/dashboard" className="inline-flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 px-4 py-2 rounded-lg text-sm font-semibold transition">
-                  <LayoutDashboard className="w-4 h-4" /> Dashboard
+                <Link href={session.user?.role === 'admin' ? "/dashboard/admin" : "/dashboard"} className="inline-flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 px-4 py-2 rounded-lg text-sm font-semibold transition">
+                  <LayoutDashboard className="w-4 h-4" /> {session.user?.role === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
                 </Link>
 
                 <button onClick={handleLogout} className="inline-flex items-center gap-1.5 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 px-3 py-2 rounded-md text-sm font-medium transition cursor-pointer">
@@ -146,8 +146,8 @@ export default function Navbar() {
                 <Link href="/dashboard/profile" onClick={() => setIsOpen(false)} className="border-transparent text-gray-600 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-zinc-800 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-3 pl-3 pr-4 py-3 border-l-4 text-base font-medium transition">
                   <User className="w-5 h-5" /> Profile
                 </Link>
-                <Link href="/dashboard" onClick={() => setIsOpen(false)} className="border-transparent text-gray-600 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-zinc-800 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-3 pl-3 pr-4 py-3 border-l-4 text-base font-medium transition">
-                  <LayoutDashboard className="w-5 h-5" /> Dashboard
+                <Link href={session.user?.role === 'admin' ? "/dashboard/admin" : "/dashboard"} onClick={() => setIsOpen(false)} className="border-transparent text-gray-600 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-zinc-800 hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-3 pl-3 pr-4 py-3 border-l-4 text-base font-medium transition">
+                  <LayoutDashboard className="w-5 h-5" /> {session.user?.role === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
                 </Link>
                 <button onClick={() => { setIsOpen(false); handleLogout(); }} className="w-full text-left border-transparent text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-500 flex items-center gap-3 pl-3 pr-4 py-3 border-l-4 text-base font-medium transition cursor-pointer">
                   <LogOut className="w-5 h-5" /> Logout

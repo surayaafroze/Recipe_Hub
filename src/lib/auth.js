@@ -23,12 +23,20 @@ export const auth = betterAuth({
   user :{
     additionalFields:{
       role:{
-        defaultValue:"admin"  
-        // admin,seler,buyer
+        type: "string",
+        defaultValue: "user"
       },
       plan:{
-        defaultValue:"user"
-        // free,pro
+        type: "string",
+        defaultValue: "user"
+      },
+      isBlocked: {
+        type: "boolean",
+        defaultValue: false
+      },
+      isPremium: {
+        type: "boolean",
+        defaultValue: false
       }
     }
   },
