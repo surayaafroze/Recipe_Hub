@@ -71,9 +71,12 @@ export default function MyRecipesPage() {
               <div className="p-5 flex-grow flex flex-col">
                 <h3 className="font-bold text-lg mb-1">{recipe.recipeName}</h3>
                 <p className="text-sm text-gray-500 mb-4">{recipe.category} • ❤️ {recipe.likesCount || 0}</p>
-                <div className="mt-auto flex justify-between items-center pt-4 border-t border-gray-100 dark:border-zinc-800">
-                  <Link href={`/recipe/${recipe._id}`} className="text-blue-600 hover:underline text-sm font-medium">View</Link>
-                  <button onClick={() => handleDelete(recipe._id)} className="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100 dark:border-zinc-800 gap-2">
+                  <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline text-sm font-semibold">View</Link>
+                  <div className="flex gap-3">
+                    <Link href={`/dashboard/edit-recipe/${recipe._id}`} className="text-amber-600 hover:underline text-sm font-semibold">Edit</Link>
+                    <button onClick={() => handleDelete(recipe._id)} className="text-red-600 hover:text-red-800 text-sm font-semibold">Delete</button>
+                  </div>
                 </div>
               </div>
             </div>
