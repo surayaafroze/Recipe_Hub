@@ -1,65 +1,167 @@
-import Image from "next/image";
+"use client";
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
-export default function Home() {
+export default function HomePage() {
+  const [featured, setFeatured] = useState([]);
+  const [popular, setPopular] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/recipes/featured')
+      .then(res => res.json())
+      .then(data => setFeatured(data))
+      .catch(() => {});
+      
+    fetch('http://localhost:5000/api/recipes/popular')
+      .then(res => res.json())
+      .then(data => setPopular(data))
+      .catch(() => {});
+  }, []);
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="bg-white dark:bg-black min-h-screen">
+      {/* Banner Section */}
+      <motion.section 
+        initial="hidden" 
+        animate="visible" 
+        variants={fadeIn}
+        className="relative bg-indigo-900 text-white overflow-hidden py-24 sm:py-32"
+      >
+        <div className="absolute inset-0 opacity-20">
+          <img src="https://images.unsplash.com/photo-1556910103-1c02745a872f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Cooking background" className="w-full h-full object-cover" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center z-10">
+          <motion.h1 variants={fadeIn} className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
+            Discover & Share <span className="text-indigo-400">Amazing Recipes</span>
+          </motion.h1>
+          <motion.p variants={fadeIn} className="mt-4 text-xl sm:text-2xl text-indigo-100 max-w-3xl mx-auto mb-10">
+            Join thousands of food enthusiasts in exploring, cooking, and sharing the world's finest culinary creations.
+          </motion.p>
+          <motion.div variants={fadeIn} className="flex justify-center gap-4">
+            <Link href="/browse-recipes" className="bg-white text-indigo-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition shadow-lg">
+              Explore Recipes
+            </Link>
+            <Link href="/login" className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg border border-indigo-500 hover:bg-indigo-700 transition shadow-lg">
+              Join Community
+            </Link>
+          </motion.div>
         </div>
-      </main>
+      </motion.section>
+
+      {/* Featured Recipes (Dynamic Section 1) */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeIn} className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Featured Recipes</h2>
+          <p className="text-gray-500 mt-2">Hand-picked by our culinary experts</p>
+        </motion.div>
+        
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {featured.map(recipe => (
+            <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden group hover:shadow-xl transition">
+              <div className="h-56 relative overflow-hidden bg-gray-200">
+                <div className="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full z-10">Featured</div>
+                {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />}
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{recipe.recipeName}</h3>
+                <p className="text-gray-500 text-sm mb-4">{recipe.category} • {recipe.cuisineType} • {recipe.preparationTime}</p>
+                <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 font-medium hover:underline">View Recipe &rarr;</Link>
+              </div>
+            </motion.div>
+          ))}
+          {featured.length === 0 && <p className="col-span-full text-center text-gray-500">No featured recipes yet.</p>}
+        </motion.div>
+      </section>
+
+      {/* Static Section 1: How it Works */}
+      <section className="py-20 bg-gray-50 dark:bg-zinc-900/50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">How RecipeHub Works</h2>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="p-6">
+              <div className="w-16 h-16 mx-auto bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl mb-4">🔍</div>
+              <h3 className="text-xl font-bold mb-2">Discover</h3>
+              <p className="text-gray-500">Find thousands of recipes filtered by category, cuisine, or diet.</p>
+            </motion.div>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="p-6">
+              <div className="w-16 h-16 mx-auto bg-pink-100 text-pink-600 rounded-full flex items-center justify-center text-2xl mb-4">❤️</div>
+              <h3 className="text-xl font-bold mb-2">Save & Like</h3>
+              <p className="text-gray-500">Create your own personal cookbook by saving your favorite finds.</p>
+            </motion.div>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="p-6">
+              <div className="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl mb-4">👨‍🍳</div>
+              <h3 className="text-xl font-bold mb-2">Share</h3>
+              <p className="text-gray-500">Upload your own recipes and build your culinary following.</p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Recipes (Dynamic Section 2) */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Popular Recipes</h2>
+            <p className="text-gray-500 mt-2">Most loved by our community</p>
+          </div>
+          <Link href="/browse-recipes" className="hidden sm:block text-indigo-600 font-medium hover:underline">View All</Link>
+        </motion.div>
+        
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {popular.map(recipe => (
+            <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 p-4 hover:shadow-md transition">
+              <div className="h-40 bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover" />}
+              </div>
+              <h3 className="font-bold text-gray-900 dark:text-white truncate mb-1">{recipe.recipeName}</h3>
+              <p className="text-sm text-gray-500 mb-3 truncate">By {recipe.authorName}</p>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-red-500 font-medium flex items-center gap-1">❤️ {recipe.likesCount || 0}</span>
+                <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline">View</Link>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* Static Section 2: Premium CTA */}
+      <section className="py-24 bg-gradient-to-br from-gray-900 to-black text-white text-center px-6">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeIn} className="max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6">Unlock Unlimited Possibilities</h2>
+          <p className="text-gray-400 text-lg mb-10">Normal users can only upload up to 2 recipes. Upgrade to Premium to share unlimited recipes, get a premium badge, and access exclusive content.</p>
+          <Link href="/dashboard" className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:from-indigo-600 hover:to-purple-700 transition shadow-xl">
+            Upgrade to Premium Now
+          </Link>
+        </motion.div>
+      </section>
     </div>
   );
 }
