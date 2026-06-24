@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { authClient } from '../../../lib/auth-client';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({ name: '', email: '', image: '' });
@@ -60,6 +61,9 @@ export default function ProfilePage() {
       });
 
       if (res.ok) {
+        // Sync with Better Auth
+        await authClient.updateUser({ image: imageUrl, name: profile.name });
+        
         toast.success('Profile updated successfully');
         setProfile(prev => ({ ...prev, image: imageUrl }));
       } else {
