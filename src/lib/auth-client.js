@@ -12,24 +12,17 @@ export const getValidToken = async () => {
   if (typeof window === 'undefined') return '';
   let token = localStorage.getItem('token');
   if (!token) {
-    try {
-      let { data } = await authClient.jwt().catch(() => ({ data: null }));
-      if (data?.jwt) {
-        token = data.jwt;
-      } else {
-        // Fallback to getting the session token which is also a JWT
-        const sessionRes = await authClient.getSession();
-        if (sessionRes?.data?.session?.token) {
-          token = sessionRes.data.session.token;
+      try {
+        const res = await fetch('/api/auth/get-token');
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.token) {
+            token = data.token;
+          }
         }
+      } catch (e) {
+        console.error('Failed to fetch session token', e);
       }
-      
-      if (token) {
-        localStorage.setItem('token', token);
-      }
-    } catch (e) {
-      console.error('Error fetching JWT', e);
-    }
   }
   return token;
 };
