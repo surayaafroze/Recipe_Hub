@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 
 // Routes that require the user to be logged in
-const PROTECTED_ROUTES = ['/dashboard'];
+const PROTECTED_ROUTES = ['/dashboard', '/admin'];
 
-// Routes that require admin role — must be a sub-path of /dashboard
-const ADMIN_ROUTES = ['/dashboard/admin'];
+// Routes that require admin role
+const ADMIN_ROUTES = ['/dashboard/admin', '/admin'];
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -55,5 +55,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/admin/:path*', '/admin'],
 };

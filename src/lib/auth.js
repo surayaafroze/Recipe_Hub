@@ -9,12 +9,7 @@ const db = client.db(process.env.AUTH_DB_NAME);
 export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
-    collections: {
-      user: "users",
-      session: "sessions",
-      account: "accounts",
-      verification: "verifications",
-    }
+    usePlural: true,
   }),
   emailAndPassword: { 
     enabled: true, 

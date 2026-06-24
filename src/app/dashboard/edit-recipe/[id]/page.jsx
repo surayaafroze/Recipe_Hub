@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { useSession } from '@/lib/auth-client';
 
 export default function EditRecipePage() {
   const router = useRouter();
   const params = useParams();
   const recipeId = params.id;
+  const { data: session } = useSession();
 
   const [fetching, setFetching] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -113,7 +115,11 @@ export default function EditRecipePage() {
 
       if (res.ok) {
         toast.success('Recipe updated successfully! 🎉', { id: toastId });
-        router.push('/dashboard/my-recipes');
+        if (session?.user?.role === 'admin') {
+          router.push('/dashboard/admin?tab=recipes');
+        } else {
+          router.push('/dashboard/my-recipes');
+        }
       } else {
         toast.error(data.error || 'Failed to update recipe', { id: toastId });
       }
@@ -225,7 +231,7 @@ export default function EditRecipePage() {
         </div>
 
         <div className="flex gap-4">
-          <Link href="/dashboard/my-recipes" className="flex-1 text-center bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-zinc-700 transition">
+          <Link href={session?.user?.role === 'admin' ? '/dashboard/admin?tab=recipes' : '/dashboard/my-recipes'} className="flex-1 text-center bg-gray-200 dark:bg-zinc-800 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-zinc-700 transition">
             Cancel
           </Link>
           <button
