@@ -30,9 +30,21 @@ export default function Navbar() {
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             <ThemeToggle />
             {session ? (
-              <Link href="/dashboard" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">
-                Dashboard
-              </Link>
+              <div className="flex items-center space-x-4">
+                <Link href="/dashboard/profile" className="flex items-center space-x-2 text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+                  {session.user?.image ? (
+                    <img src={session.user.image} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-zinc-700" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                      {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
+                  <span>Profile</span>
+                </Link>
+                <Link href="/dashboard" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition shadow-sm">
+                  Dashboard
+                </Link>
+              </div>
             ) : (
               <>
                 <Link href="/login" className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
@@ -68,12 +80,25 @@ export default function Navbar() {
             <Link href="/browse-recipes" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
               Browse Recipes
             </Link>
-            <Link href="/login" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-              Login
-            </Link>
-            <Link href="/register" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-              Register
-            </Link>
+            {session ? (
+              <>
+                <Link href="/dashboard/profile" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                  Profile
+                </Link>
+                <Link href="/dashboard" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                  Dashboard
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                  Login
+                </Link>
+                <Link href="/register" className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
