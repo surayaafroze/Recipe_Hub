@@ -7,6 +7,8 @@ function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get('session_id');
+  const type = searchParams.get('type') || 'premium';
+  const recipeId = searchParams.get('recipeId') || null;
   const [status, setStatus] = useState('processing'); // processing, success, error
 
   useEffect(() => {
@@ -24,11 +26,11 @@ function PaymentSuccessContent() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ sessionId })
+          body: JSON.stringify({ sessionId, type, recipeId })
         });
 
         const data = await res.json();
-        if (res.ok && data.isPremium) {
+        if (res.ok) {
           setStatus('success');
         } else {
           setStatus('error');
@@ -60,9 +62,13 @@ function PaymentSuccessContent() {
               </svg>
             </div>
             <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Payment Successful!</h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">Welcome to Premium. You can now add unlimited recipes.</p>
-            <Link href="/dashboard" className="bg-blue-600 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-700 transition block">
-              Go to Dashboard
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+              {type === 'recipe' 
+                ? 'Recipe purchased successfully! You can now access it in your dashboard.' 
+                : 'Welcome to Premium. You can now add unlimited recipes.'}
+            </p>
+            <Link href={type === 'recipe' ? "/dashboard/purchased-recipes" : "/dashboard"} className="bg-blue-600 text-white font-medium py-2 px-6 rounded-lg hover:bg-blue-700 transition block">
+              {type === 'recipe' ? "View Purchased Recipes" : "Go to Dashboard"}
             </Link>
           </div>
         )}

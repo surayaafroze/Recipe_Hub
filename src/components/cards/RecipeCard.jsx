@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 import ReportModal from '../modals/ReportModal';
 
 export default function RecipeCard({ recipe, onRemoveFavorite }) {
@@ -91,7 +92,7 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
                </svg>
                Report
              </button>
-             <button className="text-blue-600 dark:text-blue-400 hover:underline">View Details</button>
+             <Link href={`/recipe/${recipe._id}`} className="text-blue-600 dark:text-blue-400 hover:underline">View Details</Link>
            </div>
         </div>
       </div>
