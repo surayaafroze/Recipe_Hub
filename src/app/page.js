@@ -35,32 +35,50 @@ export default function HomePage() {
   return (
     <div className="bg-white dark:bg-black min-h-screen">
       {/* Banner Section */}
-      <motion.section 
-        initial="hidden" 
-        animate="visible" 
-        variants={fadeIn}
-        className="relative bg-indigo-900 text-white overflow-hidden py-24 sm:py-32"
-      >
-        <div className="absolute inset-0 opacity-20">
-          <img src="https://images.unsplash.com/photo-1556910103-1c02745a872f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Cooking background" className="w-full h-full object-cover" />
+      <section className="relative w-full overflow-hidden bg-black min-h-[85vh] flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
+            alt="Culinary background" 
+            className="w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent md:to-black/40"></div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center z-10">
-          <motion.h1 variants={fadeIn} className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
-            Discover & Share <span className="text-indigo-400">Amazing Recipes</span>
-          </motion.h1>
-          <motion.p variants={fadeIn} className="mt-4 text-xl sm:text-2xl text-indigo-100 max-w-3xl mx-auto mb-10">
-            Join thousands of food enthusiasts in exploring, cooking, and sharing the world's finest culinary creations.
-          </motion.p>
-          <motion.div variants={fadeIn} className="flex justify-center gap-4">
-            <Link href="/browse-recipes" className="bg-white text-indigo-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition shadow-lg">
-              Explore Recipes
-            </Link>
-            <Link href="/login" className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg border border-indigo-500 hover:bg-indigo-700 transition shadow-lg">
-              Join Community
-            </Link>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <motion.div 
+            initial="hidden" 
+            animate="visible" 
+            variants={staggerContainer}
+            className="max-w-3xl"
+          >
+            <motion.div variants={fadeIn} className="inline-block mb-4 px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 backdrop-blur-md">
+              <span className="text-indigo-300 font-semibold text-sm tracking-wide uppercase">Your Culinary Journey Starts Here</span>
+            </motion.div>
+            
+            <motion.h1 variants={fadeIn} className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+              Discover, Share & <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                Savor Every Bite
+              </span>
+            </motion.h1>
+            
+            <motion.p variants={fadeIn} className="mt-4 text-lg sm:text-xl md:text-2xl text-gray-300 mb-10 leading-relaxed max-w-2xl">
+              RecipeHub is your ultimate destination to explore thousands of mouth-watering recipes, share your own creations, and connect with a global community of food lovers.
+            </motion.p>
+            
+            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+              <Link href="/browse-recipes" className="inline-flex items-center justify-center px-8 py-4 text-base sm:text-lg font-bold text-white bg-indigo-600 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-black transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] transform hover:-translate-y-1">
+                Explore Recipes
+              </Link>
+              <Link href="/login" className="inline-flex items-center justify-center px-8 py-4 text-base sm:text-lg font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all transform hover:-translate-y-1">
+                Join Community
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Featured Recipes (Dynamic Section 1) */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
