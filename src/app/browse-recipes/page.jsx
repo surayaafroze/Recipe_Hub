@@ -71,6 +71,7 @@ export default function BrowseRecipesPage() {
             {recipes.map(recipe => (
               <div key={recipe._id} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
                 <div className="h-56 bg-gray-200 relative">
+                  {recipe.isFeatured && <span className="absolute top-3 left-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded shadow-sm z-10">Featured</span>}
                   {recipe.recipeImage ? (
                     <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover" />
                   ) : (
