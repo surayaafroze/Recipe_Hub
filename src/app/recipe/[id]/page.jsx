@@ -179,6 +179,8 @@ export default function RecipeDetailsPage() {
     );
   }
 
+  const isOwner = session?.user && (recipe.authorEmail === session.user.email || recipe.authorId === session.user.id);
+
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 my-8 bg-white dark:bg-zinc-900 shadow-xl rounded-2xl border border-gray-100 dark:border-zinc-800">
       {recipe.recipeImage && (
@@ -216,15 +218,17 @@ export default function RecipeDetailsPage() {
             ⭐ {isFavorited ? 'Favorited' : 'Favorite'}
           </button>
 
-          <button
-            onClick={() => {
-              if (!session?.user) { toast.error('Please login to report'); return; }
-              setIsReportModalOpen(true);
-            }}
-            className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition font-medium"
-          >
-            🚩 Report
-          </button>
+          {!isOwner && (
+            <button
+              onClick={() => {
+                if (!session?.user) { toast.error('Please login to report'); return; }
+                setIsReportModalOpen(true);
+              }}
+              className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition font-medium"
+            >
+              🚩 Report
+            </button>
+          )}
         </div>
       </div>
 

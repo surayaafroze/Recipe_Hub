@@ -69,27 +69,49 @@ function AdminDashboardContent() {
     }
   };
 
-  const handleBlockUser = async (userId, isBlocked) => {
+  const handleBlockUser = (userId, isBlocked) => {
     const actionText = isBlocked ? 'unblock' : 'block';
-    if (!confirm(`Are you sure you want to ${actionText} this user?`)) return;
-
-    const toastId = toast.loading(`${isBlocked ? 'Unblocking' : 'Blocking'} user...`);
-    try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ isBlocked: !isBlocked })
-      });
-      if (res.ok) {
-        toast.success(isBlocked ? 'User unblocked successfully! 🎉' : 'User blocked successfully! 🚫', { id: toastId });
-        fetchData();
-      } else {
-        toast.error('Failed to update user status', { id: toastId });
-      }
-    } catch {
-      toast.error('Network error updating user status', { id: toastId });
-    }
+    
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-gray-900 dark:text-white">
+          Are you sure you want to {actionText} this user?
+        </p>
+        <div className="flex justify-end gap-2">
+          <button 
+            onClick={() => toast.dismiss(t.id)} 
+            className="px-3 py-1.5 text-xs font-semibold bg-gray-200 dark:bg-zinc-700 text-gray-900 dark:text-gray-100 rounded-md hover:bg-gray-300 dark:hover:bg-zinc-600 transition"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              const toastId = toast.loading(`${isBlocked ? 'Unblocking' : 'Blocking'} user...`);
+              try {
+                const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ isBlocked: !isBlocked })
+                });
+                if (res.ok) {
+                  toast.success(isBlocked ? 'User unblocked successfully! 🎉' : 'User blocked successfully! 🚫', { id: toastId });
+                  fetchData();
+                } else {
+                  toast.error('Failed to update user status', { id: toastId });
+                }
+              } catch {
+                toast.error('Network error updating user status', { id: toastId });
+              }
+            }} 
+            className="px-3 py-1.5 text-xs font-semibold bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const handleFeatureRecipe = async (recipeId, isFeatured) => {
@@ -112,46 +134,90 @@ function AdminDashboardContent() {
     }
   };
 
-  const handleDeleteRecipe = async (recipeId) => {
-    if (!confirm('Are you sure you want to delete this recipe? This action is permanent.')) return;
-    const toastId = toast.loading('Deleting recipe...');
-    try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-      if (res.ok) {
-        toast.success('Recipe deleted successfully! 🗑️', { id: toastId });
-        fetchData();
-      } else {
-        toast.error('Failed to delete recipe', { id: toastId });
-      }
-    } catch {
-      toast.error('Network error deleting recipe', { id: toastId });
-    }
+  const handleDeleteRecipe = (recipeId) => {
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-gray-900 dark:text-white">
+          Are you sure you want to delete this recipe? This action is permanent.
+        </p>
+        <div className="flex justify-end gap-2">
+          <button 
+            onClick={() => toast.dismiss(t.id)} 
+            className="px-3 py-1.5 text-xs font-semibold bg-gray-200 dark:bg-zinc-700 text-gray-900 dark:text-gray-100 rounded-md hover:bg-gray-300 dark:hover:bg-zinc-600 transition"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              const toastId = toast.loading('Deleting recipe...');
+              try {
+                const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
+                  method: 'DELETE',
+                  credentials: 'include',
+                });
+                if (res.ok) {
+                  toast.success('Recipe deleted successfully! 🗑️', { id: toastId });
+                  fetchData();
+                } else {
+                  toast.error('Failed to delete recipe', { id: toastId });
+                }
+              } catch {
+                toast.error('Network error deleting recipe', { id: toastId });
+              }
+            }} 
+            className="px-3 py-1.5 text-xs font-semibold bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
-  const handleReportStatus = async (reportId, status) => {
+  const handleReportStatus = (reportId, status) => {
     const actionText = status === 'removed' ? 'remove the reported recipe' : 'dismiss this report';
-    if (!confirm(`Are you sure you want to ${actionText}?`)) return;
-
-    const toastId = toast.loading('Updating report status...');
-    try {
-      const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ status })
-      });
-      if (res.ok) {
-        toast.success(status === 'removed' ? 'Report resolved and recipe removed! 🗑️' : 'Report dismissed successfully!', { id: toastId });
-        fetchData();
-      } else {
-        toast.error('Failed to update report status', { id: toastId });
-      }
-    } catch {
-      toast.error('Network error updating report status', { id: toastId });
-    }
+    
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-gray-900 dark:text-white">
+          Are you sure you want to {actionText}?
+        </p>
+        <div className="flex justify-end gap-2">
+          <button 
+            onClick={() => toast.dismiss(t.id)} 
+            className="px-3 py-1.5 text-xs font-semibold bg-gray-200 dark:bg-zinc-700 text-gray-900 dark:text-gray-100 rounded-md hover:bg-gray-300 dark:hover:bg-zinc-600 transition"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              const toastId = toast.loading('Updating report status...');
+              try {
+                const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ status })
+                });
+                if (res.ok) {
+                  toast.success(status === 'removed' ? 'Report resolved and recipe removed! 🗑️' : 'Report dismissed successfully!', { id: toastId });
+                  fetchData();
+                } else {
+                  toast.error('Failed to update report status', { id: toastId });
+                }
+              } catch {
+                toast.error('Network error updating report status', { id: toastId });
+              }
+            }} 
+            className="px-3 py-1.5 text-xs font-semibold bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const tabs = [
