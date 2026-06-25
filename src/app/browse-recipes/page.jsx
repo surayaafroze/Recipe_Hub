@@ -94,8 +94,8 @@ export default function BrowseRecipesPage() {
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-2">
+          {totalPages > 0 && (
+            <div className="flex justify-center items-center space-x-2 mt-8">
               <button 
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
