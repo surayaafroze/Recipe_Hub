@@ -22,8 +22,9 @@ export default function LoginPage() {
         fetchOptions: {
           onResponse: (ctx) => {
             if (ctx.response.ok) {
+              const redirectUrl = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('callbackUrl') || '/' : '/';
               toast.success('Login successful! Welcome back 🎉', { id: toastId });
-              router.push('/dashboard');
+              router.push(redirectUrl);
             } else {
               toast.error(ctx.error?.message || 'Login failed', { id: toastId });
             }
@@ -39,10 +40,11 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      const redirectUrl = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('callbackUrl') || '/' : '/';
       toast.loading('Redirecting to Google...');
       await signIn.social({
         provider: 'google',
-        callbackURL: '/dashboard'
+        callbackURL: redirectUrl
       });
     } catch (error) {
       toast.error('Google login failed');

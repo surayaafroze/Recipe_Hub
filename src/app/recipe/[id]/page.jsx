@@ -67,7 +67,7 @@ export default function RecipeDetailsPage() {
   const requireLogin = (action) => {
     if (!session?.user) {
       toast.error('Please login to ' + action);
-      router.push('/login');
+      router.push(`/login?callbackUrl=${encodeURIComponent(window.location.pathname)}`);
       return false;
     }
     return true;
