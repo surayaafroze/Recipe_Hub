@@ -99,7 +99,6 @@ export default function HomePage() {
           {featured.map(recipe => (
             <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden group hover:shadow-xl transition">
               <div className="h-56 relative overflow-hidden bg-gray-200">
-                <div className="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full z-10">Featured</div>
                 {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />}
               </div>
               <div className="p-6">
