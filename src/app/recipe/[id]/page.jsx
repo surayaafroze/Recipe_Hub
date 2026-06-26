@@ -269,19 +269,29 @@ export default function RecipeDetailsPage() {
       {/* Ingredients */}
       <div className="mb-8 border-t border-gray-200 dark:border-zinc-800 pt-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Ingredients</h2>
-        <div
-          className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300"
-          dangerouslySetInnerHTML={{ __html: recipe.ingredients || '<p>No ingredients provided.</p>' }}
-        />
+        <div className="text-gray-700 dark:text-gray-300 space-y-1">
+          {(recipe.ingredients || 'No ingredients provided.')
+            .split('\n')
+            .filter(line => line.trim())
+            .map((line, i) => (
+              <p key={i} className="text-sm leading-relaxed">{line.trim()}</p>
+            ))
+          }
+        </div>
       </div>
 
       {/* Instructions */}
       <div className="mb-8 border-t border-gray-200 dark:border-zinc-800 pt-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Instructions</h2>
-        <div
-          className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300"
-          dangerouslySetInnerHTML={{ __html: recipe.instructions || '<p>No instructions provided.</p>' }}
-        />
+        <div className="text-gray-700 dark:text-gray-300 space-y-2">
+          {(recipe.instructions || 'No instructions provided.')
+            .split('\n')
+            .filter(line => line.trim())
+            .map((line, i) => (
+              <p key={i} className="text-sm leading-relaxed">{line.trim()}</p>
+            ))
+          }
+        </div>
       </div>
 
       {/* Purchase CTA — hidden for own recipe or already purchased */}
