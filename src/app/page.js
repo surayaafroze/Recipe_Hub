@@ -9,16 +9,21 @@ export default function HomePage() {
   const [featured, setFeatured] = useState([]);
   const [popular, setPopular] = useState([]);
 
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
+  const [loadingPopular, setLoadingPopular] = useState(true);
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/featured`)
       .then(res => res.json())
       .then(data => setFeatured(data))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoadingFeatured(false));
       
     fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/popular`)
       .then(res => res.json())
       .then(data => setPopular(data))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoadingPopular(false));
   }, []);
 
   const fadeIn = {
@@ -89,33 +94,39 @@ export default function HomePage() {
           <p className="text-gray-500 mt-2">Hand-picked by our culinary experts</p>
         </motion.div>
         
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {featured.map(recipe => (
-            <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden group hover:shadow-xl transition">
-              <div className="h-56 relative overflow-hidden bg-gray-200">
-                <div className="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-md z-10 flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
-                    <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                  </svg>
-                  Featured
+        {loadingFeatured ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          </div>
+        ) : (
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {featured.map(recipe => (
+              <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden group hover:shadow-xl transition">
+                <div className="h-56 relative overflow-hidden bg-gray-200">
+                  <div className="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-md z-10 flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+                      <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                    </svg>
+                    Featured
+                  </div>
+                  {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />}
                 </div>
-                {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />}
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{recipe.recipeName}</h3>
-                <p className="text-gray-500 text-sm mb-4">{recipe.category} • {recipe.cuisineType} • {recipe.preparationTime}</p>
-                <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 font-medium hover:underline">View Recipe &rarr;</Link>
-              </div>
-            </motion.div>
-          ))}
-          {featured.length === 0 && <p className="col-span-full text-center text-gray-500">No featured recipes yet.</p>}
-        </motion.div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{recipe.recipeName}</h3>
+                  <p className="text-gray-500 text-sm mb-4">{recipe.category} • {recipe.cuisineType} • {recipe.preparationTime}</p>
+                  <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 font-medium hover:underline">View Recipe &rarr;</Link>
+                </div>
+              </motion.div>
+            ))}
+            {featured.length === 0 && <p className="col-span-full text-center text-gray-500">No featured recipes yet.</p>}
+          </motion.div>
+        )}
       </section>
 
       {/* Static Section 1: How it Works */}
@@ -154,35 +165,41 @@ export default function HomePage() {
           <Link href="/browse-recipes" className="hidden sm:block text-indigo-600 font-medium hover:underline">View All</Link>
         </motion.div>
         
-        <motion.div 
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {popular.map(recipe => (
-            <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 p-4 hover:shadow-md transition">
-              <div className="h-40 bg-gray-200 rounded-lg mb-4 overflow-hidden relative">
-                {recipe.isFeatured && (
-                  <div className="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-md z-10 flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
-                      <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                    </svg>
-                    Featured
-                  </div>
-                )}
-                {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover" />}
-              </div>
-              <h3 className="font-bold text-gray-900 dark:text-white truncate mb-1">{recipe.recipeName}</h3>
-              <p className="text-sm text-gray-500 mb-3 truncate">By {recipe.authorName}</p>
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-red-500 font-medium flex items-center gap-1">❤️ {recipe.likesCount || 0}</span>
-                <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline">View</Link>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        {loadingPopular ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          </div>
+        ) : (
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {popular.map(recipe => (
+              <motion.div key={recipe._id} variants={fadeIn} className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800 p-4 hover:shadow-md transition">
+                <div className="h-40 bg-gray-200 rounded-lg mb-4 overflow-hidden relative">
+                  {recipe.isFeatured && (
+                    <div className="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-md z-10 flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
+                        <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                      </svg>
+                      Featured
+                    </div>
+                  )}
+                  {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover" />}
+                </div>
+                <h3 className="font-bold text-gray-900 dark:text-white truncate mb-1">{recipe.recipeName}</h3>
+                <p className="text-sm text-gray-500 mb-3 truncate">By {recipe.authorName}</p>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-red-500 font-medium flex items-center gap-1">❤️ {recipe.likesCount || 0}</span>
+                  <Link href={`/recipe/${recipe._id}`} className="text-indigo-600 hover:underline">View</Link>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </section>
 
       {/* Static Section 2: Premium CTA or Admin Dashboard */}
