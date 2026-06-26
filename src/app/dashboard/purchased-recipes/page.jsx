@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { authFetch } from '../../../lib/auth-client';
 
 export default function PurchasedRecipesPage() {
   const [recipes, setRecipes] = useState([]);
@@ -13,9 +14,7 @@ export default function PurchasedRecipesPage() {
 
   const fetchPurchasedRecipes = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/purchased`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/purchased`);
       if (res.ok) {
         const data = await res.json();
         setRecipes(data);

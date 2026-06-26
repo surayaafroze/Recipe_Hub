@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import DashboardStats from '../../components/dashboard/DashboardStats';
-import { useSession } from '../../lib/auth-client';
+import { useSession, authFetch } from '../../lib/auth-client';
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -22,9 +22,7 @@ export default function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/dashboard-stats`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/dashboard-stats`);
       if (res.ok) {
         const data = await res.json();
         setStats(data);
@@ -40,9 +38,8 @@ export default function DashboardPage() {
     setLoading(true);
     const toastId = toast.loading('Initializing premium upgrade...');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/create-checkout-session`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/create-checkout-session`, {
         method: 'POST',
-        credentials: 'include',
       });
       const data = await res.json();
       if (data.url) {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { authClient, useSession } from '../../../lib/auth-client';
+import { authClient, useSession, authFetch } from '../../../lib/auth-client';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -16,9 +16,7 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`);
       if (res.ok) {
         const data = await res.json();
         setProfile(data);
@@ -53,10 +51,9 @@ export default function ProfilePage() {
       }
 
       toast.loading('Saving profile changes...', { id: toastId });
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ name: profile.name, image: imageUrl })
       });
 

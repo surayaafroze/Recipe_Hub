@@ -5,6 +5,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import Loader from '@/components/shared/Loader';
 import { LayoutDashboard, Users, BookOpen, AlertOctagon, CreditCard } from 'lucide-react';
+import { authFetch } from '@/lib/auth-client';
 
 function AdminDashboardContent() {
   const searchParams = useSearchParams();
@@ -29,34 +30,32 @@ function AdminDashboardContent() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const opts = { credentials: 'include' };
-
       if (activeTab === 'overview') {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/stats`, opts);
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/stats`);
         if (res.ok) {
           const stats = await res.json();
           setData(prev => ({ ...prev, stats }));
         }
       } else if (activeTab === 'users') {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`, opts);
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`);
         if (res.ok) {
           const users = await res.json();
           setData(prev => ({ ...prev, users }));
         }
       } else if (activeTab === 'recipes') {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes?limit=50`, opts);
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes?limit=50`);
         if (res.ok) {
            const { recipes } = await res.json();
            setData(prev => ({ ...prev, recipes }));
         }
       } else if (activeTab === 'reports') {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports`, opts);
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports`);
         if (res.ok) {
           const reports = await res.json();
           setData(prev => ({ ...prev, reports }));
         }
       } else if (activeTab === 'payments') {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/payments`, opts);
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/payments`);
         if (res.ok) {
           const payments = await res.json();
           setData(prev => ({ ...prev, payments }));
@@ -89,10 +88,9 @@ function AdminDashboardContent() {
               toast.dismiss(t.id);
               const toastId = toast.loading(`${isBlocked ? 'Unblocking' : 'Blocking'} user...`);
               try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/${userId}/block`, {
+                const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/${userId}/block`, {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
-                  credentials: 'include',
                   body: JSON.stringify({ isBlocked: !isBlocked })
                 });
                 if (res.ok) {
@@ -117,10 +115,9 @@ function AdminDashboardContent() {
   const handleFeatureRecipe = async (recipeId, isFeatured) => {
     const toastId = toast.loading('Updating recipe feature status...');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}/feature`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}/feature`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ isFeatured: !isFeatured })
       });
       if (res.ok) {
@@ -152,9 +149,8 @@ function AdminDashboardContent() {
               toast.dismiss(t.id);
               const toastId = toast.loading('Deleting recipe...');
               try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`, {
+                const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`, {
                   method: 'DELETE',
-                  credentials: 'include',
                 });
                 if (res.ok) {
                   toast.success('Recipe deleted successfully! 🗑️', { id: toastId });
@@ -195,10 +191,9 @@ function AdminDashboardContent() {
               toast.dismiss(t.id);
               const toastId = toast.loading('Updating report status...');
               try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports/${reportId}/status`, {
+                const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports/${reportId}/status`, {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
-                  credentials: 'include',
                   body: JSON.stringify({ status })
                 });
                 if (res.ok) {

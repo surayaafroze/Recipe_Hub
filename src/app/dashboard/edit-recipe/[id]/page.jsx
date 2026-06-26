@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { useSession } from '@/lib/auth-client';
+import { useSession, authFetch } from '@/lib/auth-client';
 
 export default function EditRecipePage() {
   const router = useRouter();
@@ -104,10 +104,9 @@ export default function EditRecipePage() {
       }
 
       toast.loading('Saving changes...', { id: toastId });
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ ...formData, recipeImage: finalRecipeImage }),
       });
 

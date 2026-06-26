@@ -28,3 +28,19 @@ export const getValidToken = async () => {
   }
   return token || '';
 };
+
+// ─── Authenticated fetch helper ───────────────────────────────────────────────
+// Automatically attaches Bearer token for cross-origin API calls on production.
+// Falls back gracefully if token is unavailable.
+export const authFetch = async (url, options = {}) => {
+  const token = await getValidToken();
+  const headers = {
+    ...(options.headers || {}),
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+  };
+  return fetch(url, {
+    credentials: 'include',
+    ...options,
+    headers,
+  });
+};

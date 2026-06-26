@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { authFetch } from '../../../lib/auth-client';
 
 export default function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
@@ -13,9 +14,7 @@ export default function FavoritesPage() {
 
   const fetchFavorites = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`);
       if (res.ok) {
         const data = await res.json();
         setFavorites(data);
@@ -29,9 +28,8 @@ export default function FavoritesPage() {
 
   const handleRemove = async (recipeId) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipeId}`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipeId}`, {
         method: 'DELETE',
-        credentials: 'include',
       });
       if (res.ok) {
         toast.success('Removed from favorites');

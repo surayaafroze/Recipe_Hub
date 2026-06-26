@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import ReportModal from '../../../components/modals/ReportModal';
-import { useSession } from '../../../lib/auth-client';
+import { useSession, authFetch } from '../../../lib/auth-client';
 import Link from 'next/link';
 
 export default function RecipeDetailsPage() {
@@ -56,9 +56,7 @@ export default function RecipeDetailsPage() {
 
   const checkFavoriteStatus = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`);
       if (res.ok) {
         const favs = await res.json();
         setIsFavorited(favs.some(f => f._id?.toString() === recipeId || f.recipeId === recipeId));
@@ -68,9 +66,7 @@ export default function RecipeDetailsPage() {
 
   const checkPurchaseStatus = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/purchased`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/purchased`);
       if (res.ok) {
         const purchased = await res.json();
         setIsPurchased(purchased.some(r => r._id?.toString() === recipeId));
@@ -92,9 +88,8 @@ export default function RecipeDetailsPage() {
     if (likingInProgress) return;
     setLikingInProgress(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}/like`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}/like`, {
         method: 'PATCH',
-        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
@@ -118,19 +113,17 @@ export default function RecipeDetailsPage() {
     if (!requireLogin('favorite recipes')) return;
     try {
       if (isFavorited) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipeId}`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipeId}`, {
           method: 'DELETE',
-          credentials: 'include',
         });
         if (res.ok) {
           setIsFavorited(false);
           toast.success('Removed from favorites');
         }
       } else {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
           body: JSON.stringify({ recipeId }),
         });
         if (res.ok) {
@@ -151,10 +144,9 @@ export default function RecipeDetailsPage() {
     setPurchasing(true);
     const toastId = toast.loading('Initializing checkout...');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/purchase-recipe`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/purchase-recipe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ recipeId }),
       });
       const data = await res.json();

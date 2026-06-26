@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { authFetch } from '../../../lib/auth-client';
 
 export default function MyRecipesPage() {
   const [recipes, setRecipes] = useState([]);
@@ -13,9 +14,7 @@ export default function MyRecipesPage() {
 
   const fetchMyRecipes = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/my-recipes`, {
-        credentials: 'include',
-      });
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/my-recipes`);
       if (res.ok) {
         const data = await res.json();
         setRecipes(data);
@@ -31,9 +30,8 @@ export default function MyRecipesPage() {
     if (!confirm('Are you sure you want to delete this recipe?')) return;
     const toastId = toast.loading('Deleting recipe...');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${id}`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${id}`, {
         method: 'DELETE',
-        credentials: 'include',
       });
       if (res.ok) {
         toast.success('Recipe deleted successfully! 🗑️', { id: toastId });

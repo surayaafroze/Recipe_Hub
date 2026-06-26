@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import { authFetch } from '../../lib/auth-client';
 
 export default function ReportModal({ isOpen, onClose, recipeId, recipeName }) {
   const [reason, setReason] = useState('');
@@ -18,10 +19,9 @@ export default function ReportModal({ isOpen, onClose, recipeId, recipeName }) {
     setLoading(true);
     const toastId = toast.loading('Submitting report...');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ recipeId, reason }),
       });
       

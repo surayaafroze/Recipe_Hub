@@ -3,6 +3,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { authFetch } from '../../lib/auth-client';
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -19,10 +20,9 @@ function PaymentSuccessContent() {
 
     const verifyPayment = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/verify-session`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/verify-session`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
           body: JSON.stringify({ sessionId, type, recipeId }),
         });
 

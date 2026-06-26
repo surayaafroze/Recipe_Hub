@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import ReportModal from '../modals/ReportModal';
+import { authFetch } from '../../lib/auth-client';
 
 export default function RecipeCard({ recipe, onRemoveFavorite }) {
   const [isFavorited, setIsFavorited] = useState(recipe.isFavorited || false);
@@ -11,9 +12,8 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
   const toggleFavorite = async () => {
     try {
       if (isFavorited) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipe._id}`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipe._id}`, {
           method: 'DELETE',
-          credentials: 'include'
         });
         if (res.ok) {
           setIsFavorited(false);
@@ -23,12 +23,11 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
           toast.error('Failed to remove favorite');
         }
       } else {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          credentials: 'include',
           body: JSON.stringify({ recipeId: recipe._id })
         });
         if (res.ok) {

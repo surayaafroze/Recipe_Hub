@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import { useSession } from '@/lib/auth-client';
+import { useSession, authFetch } from '@/lib/auth-client';
 
 export default function AddRecipePage() {
   const { data: session } = useSession();
@@ -32,9 +32,7 @@ export default function AddRecipePage() {
   useEffect(() => {
     const checkLimit = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/dashboard-stats`, {
-          credentials: 'include',
-        });
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/dashboard-stats`);
         if (res.ok) {
           const data = await res.json();
           setRecipeLimit({
@@ -95,10 +93,9 @@ export default function AddRecipePage() {
       }
 
       toast.loading('Saving recipe details...', { id: toastId });
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes`, {
+      const res = await authFetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ ...formData, recipeImage }),
       });
 
