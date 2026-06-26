@@ -18,7 +18,7 @@
 <br />
 
 ## 🌐 Live Site Link
-*(Add your deployment link here)*
+🔗 **[https://recipe-hub-gamma-nine.vercel.app/](https://recipe-hub-gamma-nine.vercel.app/)**
 
 ## 📖 Project Overview
 RecipeHub is a comprehensive and interactive full-stack web application designed for food enthusiasts to discover, share, and manage recipes. The platform provides a seamless user experience with robust authentication, role-based access control, premium membership features via Stripe, and an intuitive admin dashboard for complete platform management. 

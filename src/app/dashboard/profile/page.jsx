@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { authClient } from '../../../lib/auth-client';
+import { authClient, useSession } from '../../../lib/auth-client';
 
 export default function ProfilePage() {
+  const { data: session } = useSession();
   const [profile, setProfile] = useState({ name: '', email: '', image: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -109,6 +110,17 @@ export default function ProfilePage() {
               onChange={(e) => setImageFile(e.target.files[0])}
             />
           </label>
+          {/* Premium / Admin Badge */}
+          {(session?.user?.isPremium || session?.user?.plan === 'premium') && (
+            <span className="mt-3 inline-flex items-center gap-1 bg-yellow-400 text-yellow-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              ⭐ Premium Member
+            </span>
+          )}
+          {session?.user?.role === 'admin' && (
+            <span className="mt-3 inline-flex items-center gap-1 bg-red-500 text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              🛡️ Admin
+            </span>
+          )}
         </div>
 
         <div>

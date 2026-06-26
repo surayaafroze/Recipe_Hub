@@ -66,7 +66,12 @@ export default function MyRecipesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {recipes.map(recipe => (
             <div key={recipe._id} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm flex flex-col">
-              <div className="h-48 bg-gray-200">
+              <div className="h-48 bg-gray-200 relative overflow-hidden">
+                {recipe.isFeatured && (
+                  <span className="absolute top-2 left-2 z-10 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow-md flex items-center gap-1">
+                    ⭐ Featured
+                  </span>
+                )}
                 {recipe.recipeImage && <img src={recipe.recipeImage} alt={recipe.recipeName} className="w-full h-full object-cover" />}
               </div>
               <div className="p-5 flex-grow flex flex-col">

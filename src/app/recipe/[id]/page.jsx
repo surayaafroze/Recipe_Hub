@@ -19,6 +19,7 @@ export default function RecipeDetailsPage() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
   const [likingInProgress, setLikingInProgress] = useState(false);
+  const [isPurchased, setIsPurchased] = useState(false);
 
   useEffect(() => {
     if (recipeId) fetchRecipe();
@@ -45,10 +46,11 @@ export default function RecipeDetailsPage() {
     }
   };
 
-  // Check favorite status once session is available
+  // Check favorite + purchase status once session is available
   useEffect(() => {
     if (session?.user && recipeId) {
       checkFavoriteStatus();
+      checkPurchaseStatus();
     }
   }, [session, recipeId]);
 
@@ -60,6 +62,18 @@ export default function RecipeDetailsPage() {
       if (res.ok) {
         const favs = await res.json();
         setIsFavorited(favs.some(f => f._id?.toString() === recipeId || f.recipeId === recipeId));
+      }
+    } catch {}
+  };
+
+  const checkPurchaseStatus = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/purchased`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const purchased = await res.json();
+        setIsPurchased(purchased.some(r => r._id?.toString() === recipeId));
       }
     } catch {}
   };
@@ -270,18 +284,35 @@ export default function RecipeDetailsPage() {
         />
       </div>
 
-      {/* Purchase CTA */}
-      <div className="mt-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-8 text-center text-white shadow-lg">
-        <h3 className="text-2xl font-bold mb-2">Want to own this recipe forever?</h3>
-        <p className="mb-6 text-blue-100">Purchase this recipe for just $5.00 to save it permanently to your dashboard.</p>
-        <button
-          onClick={handlePurchase}
-          disabled={purchasing}
-          className="bg-white text-indigo-600 font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition shadow-md disabled:opacity-50"
-        >
-          {purchasing ? 'Processing...' : '💳 Purchase Recipe — $5.00'}
-        </button>
-      </div>
+      {/* Purchase CTA — hidden for own recipe or already purchased */}
+      {!isOwner && (
+        isPurchased ? (
+          <div className="mt-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-8 text-center text-white shadow-lg">
+            <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold mb-2">You Own This Recipe! 🎉</h3>
+            <p className="text-green-100">This recipe has been added to your purchased collection.</p>
+            <Link href="/dashboard/purchased-recipes" className="inline-block mt-4 bg-white text-green-700 font-bold py-2 px-6 rounded-full hover:bg-gray-100 transition shadow-md">
+              View My Purchased Recipes
+            </Link>
+          </div>
+        ) : (
+          <div className="mt-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-8 text-center text-white shadow-lg">
+            <h3 className="text-2xl font-bold mb-2">Want to own this recipe forever?</h3>
+            <p className="mb-6 text-blue-100">Purchase this recipe for just $5.00 to save it permanently to your dashboard.</p>
+            <button
+              onClick={handlePurchase}
+              disabled={purchasing}
+              className="bg-white text-indigo-600 font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition shadow-md disabled:opacity-50"
+            >
+              {purchasing ? 'Processing...' : '💳 Purchase Recipe — $5.00'}
+            </button>
+          </div>
+        )
+      )}
 
       <ReportModal
         isOpen={isReportModalOpen}
