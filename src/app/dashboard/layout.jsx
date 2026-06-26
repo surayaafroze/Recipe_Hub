@@ -57,9 +57,9 @@ export default function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8 min-h-[80vh]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 min-h-[80vh]">
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 flex-shrink-0">
+      <aside className="w-full lg:w-64 flex-shrink-0">
         <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-200 dark:border-zinc-800 p-4 sticky top-24">
           <div className="mb-6 px-4">
             <h2 className="text-[15px] font-extrabold flex items-center gap-2 uppercase tracking-wider text-gray-900 dark:text-white">

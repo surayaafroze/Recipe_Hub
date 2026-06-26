@@ -81,7 +81,7 @@ export default function DashboardPage() {
       )}
 
       {!fetchingStats && !stats.isPremium && session?.user?.role !== 'admin' && (
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between">
+        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-8 text-white shadow-xl flex flex-col lg:flex-row items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Upgrade to Premium</h2>
             <p className="mb-4 md:mb-0 text-blue-100">Unlock unlimited recipe creations and exclusive features for just $10.00!</p>
