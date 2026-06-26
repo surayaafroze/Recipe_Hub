@@ -26,7 +26,7 @@ export default function RecipeDetailsPage() {
 
   const fetchRecipe = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`);
       if (res.ok) {
         const data = await res.json();
         setRecipe(data);
@@ -54,7 +54,7 @@ export default function RecipeDetailsPage() {
 
   const checkFavoriteStatus = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/favorites', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -78,7 +78,7 @@ export default function RecipeDetailsPage() {
     if (likingInProgress) return;
     setLikingInProgress(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}/like`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}/like`, {
         method: 'PATCH',
         credentials: 'include',
       });
@@ -104,7 +104,7 @@ export default function RecipeDetailsPage() {
     if (!requireLogin('favorite recipes')) return;
     try {
       if (isFavorited) {
-        const res = await fetch(`http://localhost:5000/api/favorites/${recipeId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipeId}`, {
           method: 'DELETE',
           credentials: 'include',
         });
@@ -113,7 +113,7 @@ export default function RecipeDetailsPage() {
           toast.success('Removed from favorites');
         }
       } else {
-        const res = await fetch('http://localhost:5000/api/favorites', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -137,7 +137,7 @@ export default function RecipeDetailsPage() {
     setPurchasing(true);
     const toastId = toast.loading('Initializing checkout...');
     try {
-      const res = await fetch('http://localhost:5000/api/payments/purchase-recipe', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/purchase-recipe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

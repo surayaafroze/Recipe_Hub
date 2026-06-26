@@ -22,7 +22,7 @@ export default function DashboardPage() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/users/dashboard-stats', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/dashboard-stats`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -40,7 +40,7 @@ export default function DashboardPage() {
     setLoading(true);
     const toastId = toast.loading('Initializing premium upgrade...');
     try {
-      const res = await fetch('http://localhost:5000/api/payments/create-checkout-session', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/create-checkout-session`, {
         method: 'POST',
         credentials: 'include',
       });

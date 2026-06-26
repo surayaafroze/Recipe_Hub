@@ -13,7 +13,7 @@ export default function FavoritesPage() {
 
   const fetchFavorites = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/favorites', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -29,7 +29,7 @@ export default function FavoritesPage() {
 
   const handleRemove = async (recipeId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/favorites/${recipeId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipeId}`, {
         method: 'DELETE',
         credentials: 'include',
       });

@@ -10,12 +10,12 @@ export default function HomePage() {
   const [popular, setPopular] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/recipes/featured')
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/featured`)
       .then(res => res.json())
       .then(data => setFeatured(data))
       .catch(() => {});
       
-    fetch('http://localhost:5000/api/recipes/popular')
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/popular`)
       .then(res => res.json())
       .then(data => setPopular(data))
       .catch(() => {});

@@ -11,7 +11,7 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
   const toggleFavorite = async () => {
     try {
       if (isFavorited) {
-        const res = await fetch(`http://localhost:5000/api/favorites/${recipe._id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites/${recipe._id}`, {
           method: 'DELETE',
           credentials: 'include'
         });
@@ -23,7 +23,7 @@ export default function RecipeCard({ recipe, onRemoveFavorite }) {
           toast.error('Failed to remove favorite');
         }
       } else {
-        const res = await fetch(`http://localhost:5000/api/favorites`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/favorites`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

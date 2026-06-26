@@ -13,7 +13,7 @@ export default function MyRecipesPage() {
 
   const fetchMyRecipes = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/recipes/my-recipes', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/my-recipes`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -31,7 +31,7 @@ export default function MyRecipesPage() {
     if (!confirm('Are you sure you want to delete this recipe?')) return;
     const toastId = toast.loading('Deleting recipe...');
     try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });

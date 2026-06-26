@@ -39,7 +39,7 @@ export default function EditRecipePage() {
 
   const fetchRecipeDetails = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`);
       if (res.ok) {
         const data = await res.json();
         setFormData({
@@ -104,7 +104,7 @@ export default function EditRecipePage() {
       }
 
       toast.loading('Saving changes...', { id: toastId });
-      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

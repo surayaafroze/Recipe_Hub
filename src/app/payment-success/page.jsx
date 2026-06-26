@@ -19,7 +19,7 @@ function PaymentSuccessContent() {
 
     const verifyPayment = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/payments/verify-session', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/verify-session`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',

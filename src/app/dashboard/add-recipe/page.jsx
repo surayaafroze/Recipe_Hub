@@ -32,7 +32,7 @@ export default function AddRecipePage() {
   useEffect(() => {
     const checkLimit = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/users/dashboard-stats', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/dashboard-stats`, {
           credentials: 'include',
         });
         if (res.ok) {
@@ -95,7 +95,7 @@ export default function AddRecipePage() {
       }
 
       toast.loading('Saving recipe details...', { id: toastId });
-      const res = await fetch('http://localhost:5000/api/recipes', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -15,7 +15,7 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/users/profile', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -52,7 +52,7 @@ export default function ProfilePage() {
       }
 
       toast.loading('Saving profile changes...', { id: toastId });
-      const res = await fetch('http://localhost:5000/api/users/profile', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

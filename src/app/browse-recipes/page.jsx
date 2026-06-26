@@ -18,7 +18,7 @@ export default function BrowseRecipesPage() {
   const fetchRecipes = async () => {
     setLoading(true);
     try {
-      let url = `http://localhost:5000/api/recipes?page=${page}&limit=9`;
+      let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes?page=${page}&limit=9`;
       if (categoryFilter) {
         url += `&categories=${categoryFilter}`;
       }

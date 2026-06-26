@@ -13,7 +13,7 @@ export default function PurchasedRecipesPage() {
 
   const fetchPurchasedRecipes = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/recipes/purchased', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/purchased`, {
         credentials: 'include',
       });
       if (res.ok) {

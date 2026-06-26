@@ -32,31 +32,31 @@ function AdminDashboardContent() {
       const opts = { credentials: 'include' };
 
       if (activeTab === 'overview') {
-        const res = await fetch('http://localhost:5000/api/admin/stats', opts);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/stats`, opts);
         if (res.ok) {
           const stats = await res.json();
           setData(prev => ({ ...prev, stats }));
         }
       } else if (activeTab === 'users') {
-        const res = await fetch('http://localhost:5000/api/admin/users', opts);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`, opts);
         if (res.ok) {
           const users = await res.json();
           setData(prev => ({ ...prev, users }));
         }
       } else if (activeTab === 'recipes') {
-        const res = await fetch('http://localhost:5000/api/recipes?limit=50', opts);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes?limit=50`, opts);
         if (res.ok) {
            const { recipes } = await res.json();
            setData(prev => ({ ...prev, recipes }));
         }
       } else if (activeTab === 'reports') {
-        const res = await fetch('http://localhost:5000/api/reports', opts);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports`, opts);
         if (res.ok) {
           const reports = await res.json();
           setData(prev => ({ ...prev, reports }));
         }
       } else if (activeTab === 'payments') {
-        const res = await fetch('http://localhost:5000/api/admin/payments', opts);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/payments`, opts);
         if (res.ok) {
           const payments = await res.json();
           setData(prev => ({ ...prev, payments }));
@@ -89,7 +89,7 @@ function AdminDashboardContent() {
               toast.dismiss(t.id);
               const toastId = toast.loading(`${isBlocked ? 'Unblocking' : 'Blocking'} user...`);
               try {
-                const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/block`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/${userId}/block`, {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
                   credentials: 'include',
@@ -117,7 +117,7 @@ function AdminDashboardContent() {
   const handleFeatureRecipe = async (recipeId, isFeatured) => {
     const toastId = toast.loading('Updating recipe feature status...');
     try {
-      const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}/feature`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}/feature`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -152,7 +152,7 @@ function AdminDashboardContent() {
               toast.dismiss(t.id);
               const toastId = toast.loading('Deleting recipe...');
               try {
-                const res = await fetch(`http://localhost:5000/api/recipes/${recipeId}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/recipes/${recipeId}`, {
                   method: 'DELETE',
                   credentials: 'include',
                 });
@@ -195,7 +195,7 @@ function AdminDashboardContent() {
               toast.dismiss(t.id);
               const toastId = toast.loading('Updating report status...');
               try {
-                const res = await fetch(`http://localhost:5000/api/reports/${reportId}/status`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports/${reportId}/status`, {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
                   credentials: 'include',

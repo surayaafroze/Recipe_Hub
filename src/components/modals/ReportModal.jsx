@@ -18,7 +18,7 @@ export default function ReportModal({ isOpen, onClose, recipeId, recipeName }) {
     setLoading(true);
     const toastId = toast.loading('Submitting report...');
     try {
-      const res = await fetch('http://localhost:5000/api/reports', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/reports`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
