@@ -12,7 +12,7 @@
 <br />
 
 <div align="center">
-  <img src="watermarked_img_17237192994868738655.png" alt="Recipe Hub Banner" width="100%" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+  <img src="https://i.ibb.co.com/nNDbWNTW/Gemini-Generated-Image-j367ucj367ucj367.png" alt="Recipe Hub Banner" width="100%" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
 </div>
 
 <br />
