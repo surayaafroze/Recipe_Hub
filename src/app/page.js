@@ -79,9 +79,15 @@ export default function HomePage() {
               <Link href="/browse-recipes" className="inline-flex items-center justify-center px-8 py-4 text-base sm:text-lg font-bold text-white bg-indigo-600 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-black transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] transform hover:-translate-y-1">
                 Explore Recipes
               </Link>
-              <Link href="/login" className="inline-flex items-center justify-center px-8 py-4 text-base sm:text-lg font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all transform hover:-translate-y-1">
-                Join Community
-              </Link>
+              {session ? (
+                <Link href={session.user.role === 'admin' ? "/admin" : "/dashboard"} className="inline-flex items-center justify-center px-8 py-4 text-base sm:text-lg font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all transform hover:-translate-y-1">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link href="/register" className="inline-flex items-center justify-center px-8 py-4 text-base sm:text-lg font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all transform hover:-translate-y-1">
+                  Join Community
+                </Link>
+              )}
             </motion.div>
           </motion.div>
         </div>
