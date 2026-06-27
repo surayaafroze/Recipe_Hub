@@ -12,7 +12,7 @@
 <br />
 
 <div align="center">
-  <img src="./public/admin_overview.png" alt="Admin Dashboard Overview" width="100%" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+  <img src="watermarked_img_17237192994868738655.png" alt="Recipe Hub Banner" width="100%" style="border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
 </div>
 
 <br />
