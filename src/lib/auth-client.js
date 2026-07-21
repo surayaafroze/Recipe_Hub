@@ -14,7 +14,7 @@ export const getValidToken = async (forceRefresh = false) => {
   
   if (forceRefresh || !token || token === 'undefined' || token === 'null') {
       try {
-        const res = await fetch('/api/auth/get-token');
+        const res = await fetch('/api/auth/get-token', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data?.token) {
