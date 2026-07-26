@@ -97,7 +97,7 @@ function AdminDashboardContent() {
                   toast.success(isBlocked ? 'User unblocked successfully! 🎉' : 'User blocked successfully! 🚫', { id: toastId });
                   fetchData();
                 } else {
-                  toast.error('Failed to update user status', { id: toastId });
+                  toast.error('Failed to  update user status', { id: toastId });
                 }
               } catch {
                 toast.error('Network error updating user status', { id: toastId });
