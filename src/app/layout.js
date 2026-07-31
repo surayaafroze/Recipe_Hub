@@ -16,12 +16,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "RecipeHub",
-  description: "Share and discover amazing recipes",
+  title: {
+    default: "RecipeHub - Discover & Share Delicious Recipes",
+    template: "%s | RecipeHub",
+  },
+  description: "RecipeHub is a full-stack platform for food lovers to share, explore, and create gourmet recipes.",
+  keywords: ["recipes", "cooking", "food sharing", "gourmet", "culinary", "RecipeHub"],
+  authors: [{ name: "RecipeHub Team" }],
   openGraph: {
-    title: 'RecipeHub',
-    description: 'Share and discover amazing recipes',
-    siteName: 'RecipeHub',
+    title: "RecipeHub - Discover & Share Delicious Recipes",
+    description: "RecipeHub is a full-stack platform for food lovers to share, explore, and create gourmet recipes.",
+    siteName: "RecipeHub",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RecipeHub - Discover & Share Delicious Recipes",
+    description: "Share and discover amazing recipes around the globe.",
   },
 };
 
