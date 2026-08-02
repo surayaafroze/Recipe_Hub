@@ -132,7 +132,23 @@ export default function EditRecipePage() {
   const inputCls = "w-full px-4 py-2.5 border border-gray-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition";
 
   if (fetching) {
-    return <div className="text-center py-20 text-gray-500">Loading recipe data...</div>;
+    return (
+      <div className="max-w-4xl mx-auto p-6 my-8 bg-white dark:bg-zinc-900 shadow-xl rounded-2xl border border-gray-100 dark:border-zinc-800 space-y-6">
+        <div className="space-y-2">
+          <div className="h-8 skeleton-shimmer rounded-lg w-48" />
+          <div className="h-4 skeleton-shimmer rounded-md w-72" />
+        </div>
+        <div className="space-y-4 pt-4">
+          <div className="h-10 skeleton-shimmer rounded-lg w-full" />
+          <div className="h-40 skeleton-shimmer rounded-xl w-full" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="h-10 skeleton-shimmer rounded-lg w-full" />
+            <div className="h-10 skeleton-shimmer rounded-lg w-full" />
+          </div>
+          <div className="h-28 skeleton-shimmer rounded-lg w-full" />
+        </div>
+      </div>
+    );
   }
 
   return (
