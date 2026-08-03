@@ -15,6 +15,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fdfcfb' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f0d0c' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata = {
   title: {
     default: "RecipeHub - Discover & Share Delicious Recipes",
@@ -48,11 +57,15 @@ export default function RootLayout({ children }) {
           <Toaster 
             position="top-right"
             toastOptions={{
+              duration: 3500,
               style: {
-                borderRadius: '12px',
+                borderRadius: '14px',
                 background: 'var(--background)',
                 color: 'var(--foreground)',
-                border: '1px solid var(--border-color, rgba(0,0,0,0.05))',
+                border: '1px solid rgba(160, 160, 160, 0.2)',
+                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+                padding: '12px 16px',
+                fontSize: '14px',
               },
             }}
           />
@@ -64,3 +77,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
