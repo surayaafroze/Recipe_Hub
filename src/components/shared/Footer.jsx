@@ -106,15 +106,15 @@ export default function Footer() {
         </div>
         
         {/* Copyright */}
-        <div className="border-t border-gray-200 dark:border-zinc-800 mt-10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="border-t border-gray-200 dark:border-zinc-800/80 mt-10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
-            &copy; {new Date().getFullYear()} RecipeHub. All rights reserved.
+            &copy; {new Date().getFullYear()} RecipeHub. All rights reserved. Built with passion for food lovers.
           </p>
           <div className="flex space-x-6">
-            <Link href="#" className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <Link href="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#" className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <Link href="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
               Terms of Service
             </Link>
           </div>
@@ -123,3 +123,4 @@ export default function Footer() {
     </footer>
   );
 }
+
